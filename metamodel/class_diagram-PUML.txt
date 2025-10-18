@@ -1,0 +1,103 @@
+@startuml
+title KrossKube Metamodel
+
+skinparam packageStyle rectangle
+skinparam ArrowColor Black
+skinparam defaultTextAlignment center
+
+' ===========================
+' Kubernetes Runtime
+' ===========================
+package "Kubernetes Runtime" {
+  class Deployment
+  class StatefulSet
+  class DaemonSet
+  class CronJob
+  class ReplicaSet
+  class Pod
+  class Container
+  class Service
+  class Ingress
+  class Namespace
+  class EnvironmentVariable
+
+  ' ---------------------------
+  ' Workload Controllers
+  ' ---------------------------
+  Deployment o-- ReplicaSet : manages
+  StatefulSet *-- "n" Pod : manages (ordered, stable IDs)
+  DaemonSet *-- "n" Pod : ensures on all nodes
+  CronJob ..> Pod : schedules jobs
+  CronJob --> Job : creates
+  class Job
+
+  ' ReplicaSet composes Pods
+  ReplicaSet *-- "n" Pod : supervises
+
+  ' Pod is composed of Containers
+  Pod *-- "n" Container : contains
+
+  ' Pod belongs to a Namespace
+  Pod ..> Namespace : belongs to
+
+  ' Service targets Pods
+  Service --> Pod : selects
+
+  ' Ingress exposes Services
+  Ingress ..> Service : exposes
+
+  ' Container has Env
+  Container o-- EnvironmentVariable : has
+
+}
+
+' ===========================
+' Storage
+' ===========================
+package "Storage" {
+  class Volume
+  class PersistentVolumeClaim
+  class PersistentVolume
+  class ExternalStorage
+
+  Pod --> "n" Volume : mounts
+  Volume --> PersistentVolumeClaim : bound to
+  PersistentVolumeClaim o-- PersistentVolume : claims
+  PersistentVolume ..> ExternalStorage : provisioned from
+}
+
+' ===========================
+' Configuration & Secrets
+' ===========================
+package "Configuration & Secrets" {
+  class ConfigMap
+  class Secret
+
+  ' Pod depends on ConfigMap and Secret
+  EnvironmentVariable ..> Secret : from (optional)
+  EnvironmentVariable ..> ConfigMap : from (optional)
+  Volume ..> Secret : mounts
+  Volume ..> ConfigMap : mounts
+
+}
+
+' ===========================
+' RBAC - Access Control
+' ===========================
+package "Security (RBAC)" {
+  class Role
+  class RoleBinding
+  class ServiceAccount
+
+  RoleBinding --> Role : binds
+  RoleBinding --> ServiceAccount : grants
+  Pod ..> ServiceAccount : runs as
+}
+
+' ===========================
+' Docker Runtime Binding
+' ===========================
+class DockerImage
+DockerImage ..> Container : used by
+
+@enduml
