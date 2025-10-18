@@ -1,12 +1,11 @@
-@startuml
-title KrossKube Metamodel
+@startuml KrossKube Metamodel
 
 skinparam packageStyle rectangle
 skinparam ArrowColor Black
 skinparam defaultTextAlignment center
 
 ' ===========================
-' Kubernetes Runtime
+' Kubernetes Runtime (Base Layer)
 ' ===========================
 package "Kubernetes Runtime" {
   class Deployment
@@ -21,9 +20,7 @@ package "Kubernetes Runtime" {
   class Namespace
   class EnvironmentVariable
 
-  ' ---------------------------
   ' Workload Controllers
-  ' ---------------------------
   Deployment o-- ReplicaSet : manages
   StatefulSet *-- "n" Pod : manages (ordered, stable IDs)
   DaemonSet *-- "n" Pod : ensures on all nodes
@@ -31,29 +28,14 @@ package "Kubernetes Runtime" {
   CronJob --> Job : creates
   class Job
 
-  ' ReplicaSet composes Pods
   ReplicaSet *-- "n" Pod : supervises
-
-  ' Pod is composed of Containers
   Pod *-- "n" Container : contains
-
-  ' Pod belongs to a Namespace
   Pod ..> Namespace : belongs to
-
-  ' Service targets Pods
   Service --> Pod : selects
-
-  ' Ingress exposes Services
   Ingress ..> Service : exposes
-
-  ' Container has Env
   Container o-- EnvironmentVariable : has
-
 }
 
-' ===========================
-' Storage
-' ===========================
 package "Storage" {
   class Volume
   class PersistentVolumeClaim
@@ -66,24 +48,16 @@ package "Storage" {
   PersistentVolume ..> ExternalStorage : provisioned from
 }
 
-' ===========================
-' Configuration & Secrets
-' ===========================
 package "Configuration & Secrets" {
   class ConfigMap
   class Secret
 
-  ' Pod depends on ConfigMap and Secret
   EnvironmentVariable ..> Secret : from (optional)
   EnvironmentVariable ..> ConfigMap : from (optional)
   Volume ..> Secret : mounts
   Volume ..> ConfigMap : mounts
-
 }
 
-' ===========================
-' RBAC - Access Control
-' ===========================
 package "Security (RBAC)" {
   class Role
   class RoleBinding
@@ -94,10 +68,101 @@ package "Security (RBAC)" {
   Pod ..> ServiceAccount : runs as
 }
 
-' ===========================
-' Docker Runtime Binding
-' ===========================
 class DockerImage
 DockerImage ..> Container : used by
+
+' ===========================
+' KrossKube MultiCluster Layer
+' ===========================
+package "KrossKube MultiCluster Abstractions" {
+  
+  abstract class MultiClusterResource {
+    +name: String
+    +clusterSelector: ClusterSelector
+    +placementPolicy: PlacementPolicy
+  }
+
+  class ClusterSelector {
+    +matchLabels: Map[String]
+    +matchExpressions: List[Requirement]
+  }
+
+  enum PlacementPolicy {
+    REPLICATED
+    DISTRIBUTED
+    BALANCED
+  }
+
+  ' Workload MultiCluster Resources
+  abstract class MultiClusterWorkload extends MultiClusterResource
+
+  class MultiClusterDeployment extends MultiClusterWorkload
+  class MultiClusterStatefulSet extends MultiClusterWorkload  
+  class MultiClusterDaemonSet extends MultiClusterWorkload
+  class MultiClusterCronJob extends MultiClusterWorkload
+  class MultiClusterPod extends MultiClusterWorkload
+
+  ' Network MultiCluster Resources
+  abstract class MultiClusterNetwork extends MultiClusterResource
+
+  class MultiClusterService extends MultiClusterNetwork
+  class MultiClusterIngress extends MultiClusterNetwork
+
+  ' Storage MultiCluster Resources
+  abstract class MultiClusterStorage extends MultiClusterResource
+
+  class MultiClusterPersistentVolume extends MultiClusterStorage
+  class MultiClusterPersistentVolumeClaim extends MultiClusterStorage
+
+  ' Security MultiCluster Resources
+  abstract class MultiClusterSecurity extends MultiClusterResource
+
+  class MultiClusterRole extends MultiClusterSecurity
+  class MultiClusterRoleBinding extends MultiClusterSecurity
+  class MultiClusterSecret extends MultiClusterSecurity
+  class MultiClusterConfigMap extends MultiClusterSecurity
+
+  ' Composition relationships
+  MultiClusterResource *-- ClusterSelector : selects clusters
+  MultiClusterResource --> PlacementPolicy : defines placement
+}
+
+' ===========================
+' CRD Generation Layer
+' ===========================
+package "Code Generation" {
+  class CRDGenerator {
+    +generateCRD(): CustomResourceDefinition
+  }
+  
+  class CustomResourceDefinition {
+    +apiVersion: String
+    +kind: String
+    +spec: CRDSpec
+  }
+}
+
+' ===========================
+' Generation Relationships
+' ===========================
+MultiClusterDeployment ..> Deployment : generates CRD for
+MultiClusterStatefulSet ..> StatefulSet : generates CRD for
+MultiClusterDaemonSet ..> DaemonSet : generates CRD for
+MultiClusterCronJob ..> CronJob : generates CRD for
+MultiClusterPod ..> Pod : generates CRD for
+
+MultiClusterService ..> Service : generates CRD for
+MultiClusterIngress ..> Ingress : generates CRD for
+
+MultiClusterPersistentVolume ..> PersistentVolume : generates CRD for
+MultiClusterPersistentVolumeClaim ..> PersistentVolumeClaim : generates CRD for
+
+MultiClusterRole ..> Role : generates CRD for
+MultiClusterRoleBinding ..> RoleBinding : generates CRD for
+MultiClusterSecret ..> Secret : generates CRD for
+MultiClusterConfigMap ..> ConfigMap : generates CRD for
+
+CRDGenerator --> MultiClusterResource : transforms to CRD
+CRDGenerator ..> CustomResourceDefinition : produces
 
 @enduml
