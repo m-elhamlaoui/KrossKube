@@ -11,7 +11,7 @@ KrossKube provides a declarative approach to managing Kubernetes resources acros
 - **Model-Driven CRD Generation**: Automatically generate CRDs from high-level models
 - **Multi-Cluster Orchestration**: Standardized resource management across different Kubernetes clusters
 - **Resource Abstraction**: High-level abstractions over the native Kubernetes resources
-- **Policy-Driven Deployment**: Consistent deployment patterns and governance
+- **Policy-Driven Deployment**: Consistent deployment patterns
 
 ## Table of Contents
 
