@@ -28,12 +28,6 @@ KrossKube provides a declarative approach to managing Kubernetes resources acros
         - [2.1.3 Object Constraint Language (OCL)](#213-object-constaint-language-ocl)
         - [2.1.3 Code Generation Layer](#213-code-generation-layer)
     - [2.2 System Architecture](#22-system-architecture)
-        - [2.2.1 Core Components](#221-core-components)
-        - [2.2.2 Runtime Components](#222-runtime-components)
-        - [2.2.3 Integration Points](#223-integration-points)
-    - [2.3 Multi-Cluster Architecture](#23-multi-cluster-architecture)
-        - [2.3.1 Cluster Abstraction](#231-cluster-abstraction)
-        - [2.3.2 Cross-Cluster Communication](#232-cross-cluster-communication)
 
 3. [Metamodel](#3-metamodel)
     - [3.1 Core Concepts](#31-core-concepts)
@@ -76,15 +70,9 @@ KrossKube provides a declarative approach to managing Kubernetes resources acros
         - [5.1.3 Validation and Verification](#513-validation-and-verification)
     - [5.2 Target Artifacts](#52-target-artifacts)
         - [5.2.1 Custom Resource Definitions](#521-custom-resource-definitions)
-    - [5.3 Customization Points](#53-customization-points)
-        - [5.3.1 Template Customization](#531-template-customization)
-        - [5.3.2 Plugin Architecture](#532-plugin-architecture)
 
 6. [Installation](#6-installation)
     - [6.1 Prerequisites](#61-prerequisites)
-        - [6.1.1 System Requirements](#611-system-requirements)
-        - [6.1.2 Kubernetes Clusters](#612-kubernetes-clusters)
-        - [6.1.3 Development Tools](#613-development-tools)
     - [6.2 Installation Methods](#62-installation-methods)
         - [6.2.1 Binary Installation](#621-binary-installation)
         - [6.2.2 Container Installation](#622-container-installation)
@@ -100,11 +88,6 @@ KrossKube provides a declarative approach to managing Kubernetes resources acros
     - [7.2 Advanced Examples](#72-advanced-examples)
         - [7.2.1 Multi-Region Web Application](#721-multi-region-web-application)
         - [7.2.2 Database Cluster with Replication](#722-database-cluster-with-replication)
-
-    - [7.3 Enterprise Examples](#73-enterprise-examples)
-        - [7.3.1 CI/CD Pipeline Integration](#731-cicd-pipeline-integration)
-        - [7.3.2 Disaster Recovery Setup](#732-disaster-recovery-setup)
-        - [7.3.3 Compliance and Governance](#733-compliance-and-governance)
 
 8. [Acknowledgments](#8-acknowledgments)
 
