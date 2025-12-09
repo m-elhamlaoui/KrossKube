@@ -128,21 +128,6 @@ package "KrossKube MultiCluster Abstractions" {
 }
 
 ' ===========================
-' CRD Generation Layer
-' ===========================
-package "Code Generation" {
-  class CRDGenerator {
-    +generateCRD(): CustomResourceDefinition
-  }
-  
-  class CustomResourceDefinition {
-    +apiVersion: String
-    +kind: String
-    +spec: CRDSpec
-  }
-}
-
-' ===========================
 ' Generation Relationships
 ' ===========================
 MultiClusterDeployment ..> Deployment : generates CRD for
@@ -162,7 +147,5 @@ MultiClusterRoleBinding ..> RoleBinding : generates CRD for
 MultiClusterSecret ..> Secret : generates CRD for
 MultiClusterConfigMap ..> ConfigMap : generates CRD for
 
-CRDGenerator --> MultiClusterResource : transforms to CRD
-CRDGenerator ..> CustomResourceDefinition : produces
 
 @enduml
