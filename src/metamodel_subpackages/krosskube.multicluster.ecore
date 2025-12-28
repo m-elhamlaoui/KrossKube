@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage
     xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
     name="multicluster"
     nsURI="http://krosskube/multicluster"
@@ -15,6 +16,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="ClusterSelector">
     <eStructuralFeatures xsi:type="ecore:EAttribute"
         name="matchLabels"
+        upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="matchExpressions"
         upperBound="-1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
@@ -43,5 +48,47 @@
 
   <eClassifiers xsi:type="ecore:EClass" name="MultiClusterDaemonSet"
       eSuperTypes="#//MultiClusterWorkload"/>
+
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterCronJob"
+      eSuperTypes="#//MultiClusterWorkload"/>
+
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterPod"
+      eSuperTypes="#//MultiClusterWorkload"/>
+
+  <!-- Network MultiCluster Resources -->
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterNetwork" abstract="true"
+      eSuperTypes="#//MultiClusterResource"/>
+
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterService"
+      eSuperTypes="#//MultiClusterNetwork"/>
+
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterIngress"
+      eSuperTypes="#//MultiClusterNetwork"/>
+
+  <!-- Storage MultiCluster Resources -->
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterStorage" abstract="true"
+      eSuperTypes="#//MultiClusterResource"/>
+
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterPersistentVolume"
+      eSuperTypes="#//MultiClusterStorage"/>
+
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterPersistentVolumeClaim"
+      eSuperTypes="#//MultiClusterStorage"/>
+
+  <!-- Security MultiCluster Resources -->
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterSecurity" abstract="true"
+      eSuperTypes="#//MultiClusterResource"/>
+
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterRole"
+      eSuperTypes="#//MultiClusterSecurity"/>
+
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterRoleBinding"
+      eSuperTypes="#//MultiClusterSecurity"/>
+
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterSecret"
+      eSuperTypes="#//MultiClusterSecurity"/>
+
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterConfigMap"
+      eSuperTypes="#//MultiClusterSecurity"/>
 
 </ecore:EPackage>

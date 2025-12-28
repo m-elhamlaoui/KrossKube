@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage
     xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
     name="runtime"
     nsURI="http://krosskube/kubernetes/runtime"
@@ -15,12 +16,17 @@
         name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 
+  <eClassifiers xsi:type="ecore:EClass" name="DockerImage"/>
+
   <eClassifiers xsi:type="ecore:EClass" name="Container">
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="environmentVariables"
         upperBound="-1"
         containment="true"
         eType="#//EnvironmentVariable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="dockerImage"
+        eType="#//DockerImage"/>
   </eClassifiers>
 
   <eClassifiers xsi:type="ecore:EClass" name="Pod">
@@ -32,6 +38,13 @@
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="namespace"
         eType="#//Namespace"/>
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="volumes"
+        upperBound="-1"
+        eType="ecore:EClass ../../metamodel_subpackages/kubernetes.storage.ecore#//Volume"/>
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="serviceAccount"
+        eType="ecore:EClass ../../metamodel_subpackages/kubernetes.security.ecore#//ServiceAccount"/>
   </eClassifiers>
 
   <eClassifiers xsi:type="ecore:EClass" name="ReplicaSet">
