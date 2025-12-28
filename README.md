@@ -117,7 +117,7 @@ KrossKube's Model-Driven Engineering foundation establishes the theoretical and 
 
 <div align="center">
 
-![KrossKube Metamodel](./metamodel/KrossKube_metamodel.png)
+![KrossKube Metamodel](./assets/KrossKube_metamodel.png)
 
 *Figure: The KrossKube Metamodel UML Class Diagram*
 
