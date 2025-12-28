@@ -2,28 +2,11 @@
 <ecore:EPackage
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    name="storage"
-    nsURI="http://krosskube/kubernetes/storage"
-    nsPrefix="storage">
+    name="config"
+    nsURI="http://krosskube/kubernetes/config"
+    nsPrefix="config">
 
-  <eClassifiers xsi:type="ecore:EClass" name="ExternalStorage"/>
-
-  <eClassifiers xsi:type="ecore:EClass" name="PersistentVolume">
-    <eStructuralFeatures xsi:type="ecore:EReference"
-        name="externalStorage"
-        eType="#//ExternalStorage"/>
-  </eClassifiers>
-
-  <eClassifiers xsi:type="ecore:EClass" name="PersistentVolumeClaim">
-    <eStructuralFeatures xsi:type="ecore:EReference"
-        name="persistentVolume"
-        eType="#//PersistentVolume"/>
-  </eClassifiers>
-
-  <eClassifiers xsi:type="ecore:EClass" name="Volume">
-    <eStructuralFeatures xsi:type="ecore:EReference"
-        name="claim"
-        eType="#//PersistentVolumeClaim"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConfigMap"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Secret"/>
 
 </ecore:EPackage>
