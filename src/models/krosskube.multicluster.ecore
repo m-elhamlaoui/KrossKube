@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    name="multicluster"
+    nsURI="http://krosskube/multicluster"
+    nsPrefix="multicluster">
+
+  <eClassifiers xsi:type="ecore:EEnum" name="PlacementPolicy">
+    <eLiterals name="REPLICATED"/>
+    <eLiterals name="DISTRIBUTED"/>
+    <eLiterals name="BALANCED"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EClass" name="ClusterSelector">
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="matchLabels"
+        upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterResource" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="name"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="clusterSelector"
+        containment="true"
+        eType="#//ClusterSelector"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="placementPolicy"
+        eType="#//PlacementPolicy"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterWorkload" abstract="true"
+      eSuperTypes="#//MultiClusterResource"/>
+
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterDeployment"
+      eSuperTypes="#//MultiClusterWorkload"/>
+
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterStatefulSet"
+      eSuperTypes="#//MultiClusterWorkload"/>
+
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterDaemonSet"
+      eSuperTypes="#//MultiClusterWorkload"/>
+
+</ecore:EPackage>

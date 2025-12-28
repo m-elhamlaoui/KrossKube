@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    name="runtime"
+    nsURI="http://krosskube/kubernetes/runtime"
+    nsPrefix="runtime">
+
+  <eClassifiers xsi:type="ecore:EClass" name="Namespace"/>
+
+  <eClassifiers xsi:type="ecore:EClass" name="EnvironmentVariable">
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EClass" name="Container">
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="environmentVariables"
+        upperBound="-1"
+        containment="true"
+        eType="#//EnvironmentVariable"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EClass" name="Pod">
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="containers"
+        upperBound="-1"
+        containment="true"
+        eType="#//Container"/>
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="namespace"
+        eType="#//Namespace"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EClass" name="ReplicaSet">
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="pods"
+        upperBound="-1"
+        containment="true"
+        eType="#//Pod"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EClass" name="Deployment">
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="replicaSet"
+        containment="true"
+        eType="#//ReplicaSet"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EClass" name="StatefulSet">
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="pods"
+        upperBound="-1"
+        containment="true"
+        eType="#//Pod"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EClass" name="DaemonSet">
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="pods"
+        upperBound="-1"
+        containment="true"
+        eType="#//Pod"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EClass" name="Job"/>
+
+  <eClassifiers xsi:type="ecore:EClass" name="CronJob">
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="jobs"
+        upperBound="-1"
+        containment="true"
+        eType="#//Job"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EClass" name="Service">
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="pods"
+        upperBound="-1"
+        eType="#//Pod"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EClass" name="Ingress">
+    <eStructuralFeatures xsi:type="ecore:EReference"
+        name="services"
+        upperBound="-1"
+        eType="#//Service"/>
+  </eClassifiers>
+
+</ecore:EPackage>
