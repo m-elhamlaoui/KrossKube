@@ -7,30 +7,34 @@
     nsURI="http://krosskube/kubernetes/storage"
     nsPrefix="storage">
 
+  <!-- External Storage -->
   <eClassifiers xsi:type="ecore:EClass" name="ExternalStorage"/>
 
+  <!-- Persistent Volume (PV) -->
   <eClassifiers xsi:type="ecore:EClass" name="PersistentVolume">
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="externalStorage"
         eType="#//ExternalStorage"/>
   </eClassifiers>
 
+  <!-- Persistent Volume Claim (PVC) -->
   <eClassifiers xsi:type="ecore:EClass" name="PersistentVolumeClaim">
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="persistentVolume"
         eType="#//PersistentVolume"/>
   </eClassifiers>
 
+  <!-- Volume -->
   <eClassifiers xsi:type="ecore:EClass" name="Volume">
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="claim"
         eType="#//PersistentVolumeClaim"/>
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="secret"
-        eType="ecore:EClass ../../metamodel_subpackages/kubernetes.config.ecore#//Secret"/>
+        eType="ecore:EClass ./kubernetes.config.ecore#//Secret"/>
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="configMap"
-        eType="ecore:EClass ../../metamodel_subpackages/kubernetes.config.ecore#//ConfigMap"/>
+        eType="ecore:EClass ./kubernetes.config.ecore#//ConfigMap"/>
   </eClassifiers>
 
 </ecore:EPackage>

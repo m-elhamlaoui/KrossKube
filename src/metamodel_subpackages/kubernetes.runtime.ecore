@@ -7,8 +7,10 @@
     nsURI="http://krosskube/kubernetes/runtime"
     nsPrefix="runtime">
 
+  <!-- Namespace -->
   <eClassifiers xsi:type="ecore:EClass" name="Namespace"/>
 
+  <!-- Environment Variable -->
   <eClassifiers xsi:type="ecore:EClass" name="EnvironmentVariable">
     <eStructuralFeatures xsi:type="ecore:EAttribute"
         name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -16,8 +18,10 @@
         name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 
+  <!-- Docker Image -->
   <eClassifiers xsi:type="ecore:EClass" name="DockerImage"/>
 
+  <!-- Container -->
   <eClassifiers xsi:type="ecore:EClass" name="Container">
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="environmentVariables"
@@ -29,6 +33,7 @@
         eType="#//DockerImage"/>
   </eClassifiers>
 
+  <!-- Pod -->
   <eClassifiers xsi:type="ecore:EClass" name="Pod">
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="containers"
@@ -41,12 +46,13 @@
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="volumes"
         upperBound="-1"
-        eType="ecore:EClass ../../metamodel_subpackages/kubernetes.storage.ecore#//Volume"/>
+        eType="ecore:EClass ./kubernetes.storage.ecore#//Volume"/>
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="serviceAccount"
-        eType="ecore:EClass ../../metamodel_subpackages/kubernetes.security.ecore#//ServiceAccount"/>
+        eType="ecore:EClass ./kubernetes.security.ecore#//ServiceAccount"/>
   </eClassifiers>
 
+  <!-- Replica Set -->
   <eClassifiers xsi:type="ecore:EClass" name="ReplicaSet">
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="pods"
@@ -55,6 +61,7 @@
         eType="#//Pod"/>
   </eClassifiers>
 
+  <!-- Deployment -->
   <eClassifiers xsi:type="ecore:EClass" name="Deployment">
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="replicaSet"
@@ -62,6 +69,7 @@
         eType="#//ReplicaSet"/>
   </eClassifiers>
 
+  <!-- Stateful Set -->
   <eClassifiers xsi:type="ecore:EClass" name="StatefulSet">
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="pods"
@@ -70,6 +78,7 @@
         eType="#//Pod"/>
   </eClassifiers>
 
+  <!-- Daemon Set -->
   <eClassifiers xsi:type="ecore:EClass" name="DaemonSet">
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="pods"
@@ -78,8 +87,10 @@
         eType="#//Pod"/>
   </eClassifiers>
 
+  <!-- Job-->
   <eClassifiers xsi:type="ecore:EClass" name="Job"/>
 
+  <!-- CronJob -->
   <eClassifiers xsi:type="ecore:EClass" name="CronJob">
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="jobs"
@@ -88,6 +99,7 @@
         eType="#//Job"/>
   </eClassifiers>
 
+  <!-- Service -->
   <eClassifiers xsi:type="ecore:EClass" name="Service">
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="pods"
@@ -95,6 +107,7 @@
         eType="#//Pod"/>
   </eClassifiers>
 
+  <!-- Ingress -->
   <eClassifiers xsi:type="ecore:EClass" name="Ingress">
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="services"

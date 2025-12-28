@@ -12,18 +12,7 @@
     <eLiterals name="DISTRIBUTED"/>
     <eLiterals name="BALANCED"/>
   </eClassifiers>
-
-  <eClassifiers xsi:type="ecore:EClass" name="ClusterSelector">
-    <eStructuralFeatures xsi:type="ecore:EAttribute"
-        name="matchLabels"
-        upperBound="-1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute"
-        name="matchExpressions"
-        upperBound="-1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-
+  
   <eClassifiers xsi:type="ecore:EClass" name="MultiClusterResource" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute"
         name="name"
@@ -37,6 +26,18 @@
         eType="#//PlacementPolicy"/>
   </eClassifiers>
 
+  <eClassifiers xsi:type="ecore:EClass" name="ClusterSelector">
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="matchLabels"
+        upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="matchExpressions"
+        upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+
+  <!-- Workload MultiCluster Resources -->
   <eClassifiers xsi:type="ecore:EClass" name="MultiClusterWorkload" abstract="true"
       eSuperTypes="#//MultiClusterResource"/>
 

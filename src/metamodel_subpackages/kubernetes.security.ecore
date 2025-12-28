@@ -6,9 +6,12 @@
     nsURI="http://krosskube/kubernetes/security"
     nsPrefix="security">
 
+  <!-- Role-->
   <eClassifiers xsi:type="ecore:EClass" name="Role"/>
+  <!-- Service Account -->
   <eClassifiers xsi:type="ecore:EClass" name="ServiceAccount"/>
 
+  <!-- Role Binding -->
   <eClassifiers xsi:type="ecore:EClass" name="RoleBinding">
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="role"
