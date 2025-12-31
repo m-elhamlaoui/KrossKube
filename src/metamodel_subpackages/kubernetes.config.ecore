@@ -9,6 +9,13 @@
 
   <!-- Config Map -->
   <eClassifiers xsi:type="ecore:EClass" name="ConfigMap">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="dataNotEmpty dataKeysValid"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="dataNotEmpty" value="data->size() > 0"/>
+      <details key="dataKeysValid" value="data->forAll(key | key.matches('[A-Za-z0-9._-]+'))"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute"
         name="data"
         upperBound="-1"
@@ -17,6 +24,15 @@
 
   <!-- Secret -->
   <eClassifiers xsi:type="ecore:EClass" name="Secret">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="dataNotEmpty typeRequired typeValid dataKeysValid"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="dataNotEmpty" value="data->size() > 0"/>
+      <details key="typeRequired" value="not type.oclIsUndefined()"/>
+      <details key="typeValid" value="type.matches('Opaque|kubernetes.io/service-account-token|kubernetes.io/dockercfg|kubernetes.io/dockerconfigjson|kubernetes.io/basic-auth|kubernetes.io/ssh-auth|kubernetes.io/tls')"/>
+      <details key="dataKeysValid" value="data->forAll(key | key.matches('[A-Za-z0-9._-]+'))"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute"
         name="data"
         upperBound="-1"

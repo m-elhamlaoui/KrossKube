@@ -12,6 +12,25 @@
 
   <!-- Persistent Volume (PV) -->
   <eClassifiers xsi:type="ecore:EClass" name="PersistentVolume">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="capacityRequired accessModesRequired accessModesValid reclaimPolicyValid"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="capacityRequired" value="not capacity.storage.oclIsUndefined()"/>
+      <details key="accessModesRequired" value="accessModes->size() > 0"/>
+      <details key="accessModesValid" value="accessModes->forAll(mode | mode.matches('ReadWriteOnce|ReadOnlyMany|ReadWriteMany'))"/>
+      <details key="reclaimPolicyValid" value="reclaimPolicy.matches('Retain|Recycle|Delete')"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="capacity"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="accessModes"
+        upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="reclaimPolicy"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="externalStorage"
         eType="#//ExternalStorage"/>
@@ -19,6 +38,18 @@
 
   <!-- Persistent Volume Claim (PVC) -->
   <eClassifiers xsi:type="ecore:EClass" name="PersistentVolumeClaim">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="accessModesValid storageRequested storageFormatValid"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="accessModesValid" value="accessModes->forAll(mode | mode.matches('ReadWriteOnce|ReadOnlyMany|ReadWriteMany'))"/>
+      <details key="storageRequested" value="not resources.requests.storage.oclIsUndefined()"/>
+      <details key="storageFormatValid" value="resources.requests.storage.matches('[0-9]+(Ei|Pi|Ti|Gi|Mi|Ki)')"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="accessModes"
+        upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="persistentVolume"
         eType="#//PersistentVolume"/>
@@ -26,6 +57,17 @@
 
   <!-- Volume -->
   <eClassifiers xsi:type="ecore:EClass" name="Volume">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="exactlyOneVolumeSource nameRequired nameValid"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="exactlyOneVolumeSource" value="(not claim.oclIsUndefined()).oclAsType(Integer) + (not secret.oclIsUndefined()).oclAsType(Integer) + (not configMap.oclIsUndefined()).oclAsType(Integer) = 1"/>
+      <details key="nameRequired" value="not name.oclIsUndefined() and name.size() > 0"/>
+      <details key="nameValid" value="name.matches('[a-z0-9]([-a-z0-9]*[a-z0-9])?')"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute"
+        name="name"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference"
         name="claim"
         eType="#//PersistentVolumeClaim"/>
