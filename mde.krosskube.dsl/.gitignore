@@ -1,0 +1,14 @@
+.launch
+.settings
+bin/
+src-gen/
+.classpath
+xtend-gen/
+.antlr-generator-3.2.0-patch.jar
+.project
+krosskube.genmodel
+kubernetes.config.ecore
+kubernetes.runtime.ecore
+kubernetes.storage.ecore
+kubernetes.security.ecore
+krosskube.multicluster.ecore

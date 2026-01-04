@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated krosskube -->
+      <package
+            uri="krosskube.multicluster"
+            class="multicluster.MulticlusterPackage"
+            genModel="krosskube.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated krosskube -->
+      <package
+            uri="krosskube.kubernetes.config"
+            class="config.ConfigPackage"
+            genModel="krosskube.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated krosskube -->
+      <package
+            uri="krosskube.kubernetes.runtime"
+            class="runtime.RuntimePackage"
+            genModel="krosskube.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated krosskube -->
+      <package
+            uri="krosskube.kubernetes.security"
+            class="security.SecurityPackage"
+            genModel="krosskube.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated krosskube -->
+      <package
+            uri="krosskube.kubernetes.storage"
+            class="storage.StoragePackage"
+            genModel="krosskube.genmodel"/>
+   </extension>
+
+</plugin>
