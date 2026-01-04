@@ -1,0 +1,82 @@
+MultiClusterDeployment "web-application" {
+    placementPolicy DISTRIBUTED
+    clusterSelector ClusterSelector {
+        matchLabels { "environment", "tier" }
+        matchExpressions { "region in (us-east-1,eu-west-1)" }
+    }
+    deploymentTemplate Deployment {
+        replicaSet ReplicaSet {
+            pods {
+                Pod "web-app-pod" {
+                    labels { "app=web-application", "version=v1.2.0" }
+                    annotations { "deployment.kubernetes.io/revision=1" }
+                    restartPolicy Always
+                    imagePullSecrets { "registry-secret" }
+                    containers {
+                        Container "nginx-proxy" {
+                            dockerImage DockerImage "nginx" {
+                                tag "1.21-alpine"
+                                registry "docker.io"
+                                pullPolicy IfNotPresent
+                            }
+                            ports {
+                                Port "http" {
+                                    containerPort 80
+                                    protocol TCP
+                                },
+                                Port "https" {
+                                    containerPort 443
+                                    protocol TCP
+                                }
+                            }
+                            environmentVariables {
+                                EnvironmentVariable "APP_ENV" {
+                                    value "production"
+                                },
+                                EnvironmentVariable "LOG_LEVEL" {
+                                    value "info"
+                                }
+                            }
+                            resources ResourceRequirements {
+                                cpuLimit "500m"
+                                memoryLimit "512Mi"
+                                cpuRequest "250m"
+                                memoryRequest "256Mi"
+                            }
+                            command { "/bin/sh", "-c" }
+                            args { "nginx -g 'daemon off;'" }
+                        },
+                        Container "web-app" {
+                            dockerImage DockerImage "mycompany/webapp" {
+                                tag "v1.2.0"
+                                registry "registry.mycompany.com"
+                                pullPolicy Always
+                            }
+                            ports {
+                                Port "app-port" {
+                                    containerPort 8080
+                                    protocol TCP
+                                }
+                            }
+                            environmentVariables {
+                                EnvironmentVariable "DATABASE_URL" {
+                                    value "postgresql://db:5432/webapp"
+                                },
+                                EnvironmentVariable "REDIS_URL" {
+                                    value "redis://redis:6379"
+                                }
+                            }
+                            resources ResourceRequirements {
+                                cpuLimit "1000m"
+                                memoryLimit "1Gi"
+                                cpuRequest "500m"
+                                memoryRequest "512Mi"
+                            }
+                            command { "/app/start.sh" }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

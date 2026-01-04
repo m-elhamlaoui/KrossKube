@@ -1,0 +1,15 @@
+MultiClusterConfigMap "application-config" {
+    placementPolicy DISTRIBUTED
+    clusterSelector ClusterSelector {
+        matchLabels { "environment=production", "tier=backend" }
+    }
+    configMapTemplate ConfigMap "app-config" {
+        labels { "app=web-application", "component=config" }
+        annotations { "config.krosskube.io/version=1.0" }
+        data { 
+            "database.properties=host=postgres-service\nport=5432\nname=webapp",
+            "redis.conf=maxmemory 2gb\nmaxmemory-policy allkeys-lru",
+            "app.yaml=debug: false\nlog_level: info\nmax_connections: 1000"
+        }
+    }
+}

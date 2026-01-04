@@ -1,0 +1,12 @@
+MultiClusterCronJob "daily-report-generator" {
+    placementPolicy REPLICATED
+    clusterSelector ClusterSelector {
+        matchLabels { "environment=production", "compute=batch" }
+        matchExpressions { "region in (us-west-2,eu-central-1)" }
+    }
+    cronJobTemplate CronJob {
+        jobs {
+            Job
+        }
+    }
+}

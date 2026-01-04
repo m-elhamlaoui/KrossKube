@@ -1,0 +1,50 @@
+MultiClusterStatefulSet "postgres-database" {
+    placementPolicy BALANCED
+    clusterSelector ClusterSelector {
+        matchLabels { "environment=production", "storage=ssd" }
+        matchExpressions { "zone in (us-east-1a,us-east-1b)" }
+    }
+    statefulSetTemplate StatefulSet {
+        pods {
+            Pod "postgres-pod" {
+                labels { "app=postgres", "component=database", "version=14.5" }
+                annotations { "backup.krosskube.io/enabled=true" }
+                restartPolicy Always
+                containers {
+                    Container "postgres" {
+                        dockerImage DockerImage "postgres" {
+                            tag "14.5-alpine"
+                            registry "docker.io"
+                            pullPolicy IfNotPresent
+                        }
+                        ports {
+                            Port "postgres" {
+                                containerPort 5432
+                                protocol TCP
+                            }
+                        }
+                        environmentVariables {
+                            EnvironmentVariable "POSTGRES_DB" {
+                                value "webapp"
+                            },
+                            EnvironmentVariable "POSTGRES_USER" {
+                                value "app_user"
+                            },
+                            EnvironmentVariable "PGDATA" {
+                                value "/var/lib/postgresql/data/pgdata"
+                            }
+                        }
+                        resources ResourceRequirements {
+                            cpuLimit "2000m"
+                            memoryLimit "4Gi"
+                            cpuRequest "1000m"
+                            memoryRequest "2Gi"
+                            storageRequest "100Gi"
+                        }
+                        command { "postgres" }
+                    }
+                }
+            }
+        }
+    }
+}

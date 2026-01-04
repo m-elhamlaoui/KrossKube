@@ -1,0 +1,16 @@
+MultiClusterPersistentVolumeClaim "postgres-storage" {
+    placementPolicy BALANCED
+    clusterSelector ClusterSelector {
+        matchLabels { "environment=production", "storage=ssd" }
+    }
+    pvcTemplate PersistentVolumeClaim "postgres-pvc" {
+        labels { "app=postgres", "component=storage" }
+        annotations { "volume.beta.kubernetes.io/storage-class=fast-ssd" }
+        accessModes { "ReadWriteOnce" }
+        storageRequest "100Gi"
+        storageClassName "fast-ssd"
+        selector LabelSelector {
+            matchLabels { "type=database-storage" }
+        }
+    }
+}

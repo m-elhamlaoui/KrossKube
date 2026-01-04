@@ -1,0 +1,23 @@
+MultiClusterService "api-gateway-service" {
+    placementPolicy DISTRIBUTED
+    clusterSelector ClusterSelector {
+        matchLabels { "environment=production", "tier=frontend" }
+        matchExpressions { "region in (us-east-1,eu-west-1)" }
+    }
+    serviceTemplate Service "api-gateway-svc" {
+        type LoadBalancer
+        selector { "app=api-gateway", "component=backend" }
+        ports {
+            ServicePort "http" {
+                port 80
+                targetPort 8080
+                protocol TCP
+            },
+            ServicePort "grpc" {
+                port 9090
+                targetPort 9090
+                protocol TCP
+            }
+        }
+    }
+}

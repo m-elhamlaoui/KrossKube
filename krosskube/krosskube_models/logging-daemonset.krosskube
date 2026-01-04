@@ -1,0 +1,53 @@
+MultiClusterDaemonSet "logging-agent" {
+    placementPolicy REPLICATED
+    clusterSelector ClusterSelector {
+        matchLabels { "logging=enabled" }
+        matchExpressions { "node-type in (worker,compute)" }
+    }
+    daemonSetTemplate DaemonSet {
+        pods {
+            Pod "fluentd-pod" {
+                labels { "app=fluentd", "component=logging" }
+                annotations { "prometheus.io/scrape=true", "prometheus.io/port=24231" }
+                restartPolicy Always
+                containers {
+                    Container "fluentd" {
+                        dockerImage DockerImage "fluent/fluentd" {
+                            tag "v1.16-debian-1"
+                            registry "docker.io"
+                            pullPolicy Always
+                        }
+                        ports {
+                            Port "forward" {
+                                containerPort 24224
+                                protocol TCP
+                            },
+                            Port "http" {
+                                containerPort 9880
+                                protocol TCP
+                            },
+                            Port "metrics" {
+                                containerPort 24231
+                                protocol TCP
+                            }
+                        }
+                        environmentVariables {
+                            EnvironmentVariable "FLUENTD_CONF" {
+                                value "fluent.conf"
+                            },
+                            EnvironmentVariable "FLUENTD_SYSTEMD_CONF" {
+                                value "disable"
+                            }
+                        }
+                        resources ResourceRequirements {
+                            cpuLimit "200m"
+                            memoryLimit "512Mi"
+                            cpuRequest "100m"
+                            memoryRequest "256Mi"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
