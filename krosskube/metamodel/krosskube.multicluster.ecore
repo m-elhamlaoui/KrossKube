@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="multicluster" nsURI="krosskube.multicluster" nsPrefix="multicluster">
+  <eClassifiers xsi:type="ecore:EEnum" name="PlacementPolicy">
+    <eLiterals name="REPLICATED"/>
+    <eLiterals name="DISTRIBUTED"/>
+    <eLiterals name="BALANCED"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterResource" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="nameNotEmpty nameValidFormat nameMaxLength placementPolicyRequired clusterSelectorForDistribution"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="nameNotEmpty" value="not name.oclIsUndefined() and name.size() > 0"/>
+      <details key="nameValidFormat" value="name.matches('[a-z0-9]([-a-z0-9]*[a-z0-9])?')"/>
+      <details key="nameMaxLength" value="name.size() &lt;= 253"/>
+      <details key="placementPolicyRequired" value="not placementPolicy.oclIsUndefined()"/>
+      <details key="clusterSelectorForDistribution" value="(placementPolicy = PlacementPolicy::DISTRIBUTED or placementPolicy = PlacementPolicy::BALANCED) implies not clusterSelector.oclIsUndefined()"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="clusterSelector" eType="#//ClusterSelector"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="placementPolicy" eType="#//PlacementPolicy"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ClusterSelector">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="hasMatchCriteria matchExpressionsValid"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="hasMatchCriteria" value="matchLabels->size() > 0 or matchExpressions->size() > 0"/>
+      <details key="matchExpressionsValid" value="matchExpressions->forAll(expr | expr.matches('.*[!=].*') or expr.matches('.*[not ]*in.*'))"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="matchLabels" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="matchExpressions" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterWorkload" abstract="true"
+      eSuperTypes="#//MultiClusterResource"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterDeployment" eSuperTypes="#//MultiClusterWorkload">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="deploymentTemplateRequired deploymentHasReplicaSet replicaSetHasPods"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="deploymentTemplateRequired" value="not deploymentTemplate.oclIsUndefined()"/>
+      <details key="deploymentHasReplicaSet" value="not deploymentTemplate.replicaSet.oclIsUndefined()"/>
+      <details key="replicaSetHasPods" value="deploymentTemplate.replicaSet.pods->size() > 0"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="deploymentTemplate" eType="ecore:EClass kubernetes.runtime.ecore#//Deployment"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterStatefulSet" eSuperTypes="#//MultiClusterWorkload">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="statefulSetTemplate" eType="ecore:EClass kubernetes.runtime.ecore#//StatefulSet"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterDaemonSet" eSuperTypes="#//MultiClusterWorkload">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="daemonSetTemplate" eType="ecore:EClass kubernetes.runtime.ecore#//DaemonSet"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterCronJob" eSuperTypes="#//MultiClusterWorkload">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cronJobTemplate" eType="ecore:EClass kubernetes.runtime.ecore#//CronJob"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterPod" eSuperTypes="#//MultiClusterWorkload">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="podTemplateRequired podHasContainers containerImagesSpecified"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="podTemplateRequired" value="not podTemplate.oclIsUndefined()"/>
+      <details key="podHasContainers" value="podTemplate.containers->size() > 0"/>
+      <details key="containerImagesSpecified" value="podTemplate.containers->forAll(c | not c.dockerImage.oclIsUndefined())"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="podTemplate" eType="ecore:EClass kubernetes.runtime.ecore#//Pod"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterNetwork" abstract="true"
+      eSuperTypes="#//MultiClusterResource"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterService" eSuperTypes="#//MultiClusterNetwork">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="serviceTemplateRequired serviceHasPodReferences"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="serviceTemplateRequired" value="not serviceTemplate.oclIsUndefined()"/>
+      <details key="serviceHasPodReferences" value="serviceTemplate.pods->size() > 0"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="serviceTemplate" eType="ecore:EClass kubernetes.runtime.ecore#//Service"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterIngress" eSuperTypes="#//MultiClusterNetwork">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ingressTemplate" eType="ecore:EClass kubernetes.runtime.ecore#//Ingress"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterStorage" abstract="true"
+      eSuperTypes="#//MultiClusterResource"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterPersistentVolume" eSuperTypes="#//MultiClusterStorage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pvTemplate" eType="ecore:EClass kubernetes.storage.ecore#//PersistentVolume"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterPersistentVolumeClaim" eSuperTypes="#//MultiClusterStorage">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="pvcTemplateRequired pvcHasPersistentVolume"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="pvcTemplateRequired" value="not pvcTemplate.oclIsUndefined()"/>
+      <details key="pvcHasPersistentVolume" value="not pvcTemplate.persistentVolume.oclIsUndefined()"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pvcTemplate" eType="ecore:EClass kubernetes.storage.ecore#//PersistentVolumeClaim"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterSecurity" abstract="true"
+      eSuperTypes="#//MultiClusterResource"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterRole" eSuperTypes="#//MultiClusterSecurity">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="roleTemplate" eType="ecore:EClass kubernetes.security.ecore#//Role"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterRoleBinding" eSuperTypes="#//MultiClusterSecurity">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="roleBindingTemplateRequired roleBindingHasRole roleBindingHasServiceAccount"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="roleBindingTemplateRequired" value="not roleBindingTemplate.oclIsUndefined()"/>
+      <details key="roleBindingHasRole" value="not roleBindingTemplate.role.oclIsUndefined()"/>
+      <details key="roleBindingHasServiceAccount" value="not roleBindingTemplate.serviceAccount.oclIsUndefined()"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="roleBindingTemplate" eType="ecore:EClass kubernetes.security.ecore#//RoleBinding"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterSecret" eSuperTypes="#//MultiClusterSecurity">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="secretTemplateRequired secretHasData secretTypeValid"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="secretTemplateRequired" value="not secretTemplate.oclIsUndefined()"/>
+      <details key="secretHasData" value="secretTemplate.data->size() > 0"/>
+      <details key="secretTypeValid" value="secretTemplate.type.matches('Opaque|kubernetes.io/.*')"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="secretTemplate" eType="ecore:EClass kubernetes.config.ecore#//Secret"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultiClusterConfigMap" eSuperTypes="#//MultiClusterSecurity">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="configMapTemplateRequired configMapHasData"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="configMapTemplateRequired" value="not configMapTemplate.oclIsUndefined()"/>
+      <details key="configMapHasData" value="configMapTemplate.data->size() > 0"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="configMapTemplate" eType="ecore:EClass kubernetes.config.ecore#//ConfigMap"
+        containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>

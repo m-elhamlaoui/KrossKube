@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="runtime" nsURI="krosskube.kubernetes.runtime" nsPrefix="runtime">
+  <eClassifiers xsi:type="ecore:EEnum" name="ImagePullPolicy">
+    <eLiterals name="Always"/>
+    <eLiterals name="IfNotPresent"/>
+    <eLiterals name="Never"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ServiceType">
+    <eLiterals name="ClusterIP"/>
+    <eLiterals name="NodePort"/>
+    <eLiterals name="LoadBalancer"/>
+    <eLiterals name="ExternalName"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="RestartPolicy">
+    <eLiterals name="Always"/>
+    <eLiterals name="OnFailure"/>
+    <eLiterals name="Never"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Protocol">
+    <eLiterals name="TCP"/>
+    <eLiterals name="UDP"/>
+    <eLiterals name="SCTP"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Namespace">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="nameRequired nameValidFormat nameMaxLength"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="nameRequired" value="not name.oclIsUndefined() and name.size() > 0"/>
+      <details key="nameValidFormat" value="name.matches('[a-z0-9]([-a-z0-9]*[a-z0-9])?')"/>
+      <details key="nameMaxLength" value="name.size() &lt;= 63"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="labels" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="annotations" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EnvironmentVariable">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="nameRequired nameValid"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="nameRequired" value="not name.oclIsUndefined() and name.size() > 0"/>
+      <details key="nameValid" value="name.matches('[A-Za-z_][A-Za-z0-9_]*')"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DockerImage">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="nameRequired nameValidFormat tagValidFormat"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="nameRequired" value="not name.oclIsUndefined() and name.size() > 0"/>
+      <details key="nameValidFormat" value="name.matches('[a-z0-9._-]+(/[a-z0-9._-]+)*')"/>
+      <details key="tagValidFormat" value="tag.oclIsUndefined() or tag.matches('[a-zA-Z0-9._-]+')"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tag" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="latest"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="registry" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pullPolicy" eType="#//ImagePullPolicy"
+        defaultValueLiteral="IfNotPresent"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Port">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="containerPortRequired containerPortValid nameValidFormat"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="containerPortRequired" value="containerPort > 0"/>
+      <details key="containerPortValid" value="containerPort >= 1 and containerPort &lt;= 65535"/>
+      <details key="nameValidFormat" value="name.oclIsUndefined() or name.matches('[a-z0-9]([-a-z0-9]*[a-z0-9])?')"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="containerPort" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="protocol" eType="#//Protocol"
+        defaultValueLiteral="TCP"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hostPort" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ResourceRequirements">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cpuLimit" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="memoryLimit" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cpuRequest" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="memoryRequest" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="storageRequest" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Container">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="nameRequired imageRequired environmentVariableNamesUnique environmentVariableNamesValid nameValidFormat"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="nameRequired" value="not name.oclIsUndefined() and name.size() > 0"/>
+      <details key="imageRequired" value="not dockerImage.oclIsUndefined()"/>
+      <details key="environmentVariableNamesUnique" value="environmentVariables->isUnique(env | env.name)"/>
+      <details key="environmentVariableNamesValid" value="environmentVariables->forAll(env | env.name.matches('[A-Z_][A-Z0-9_]*'))"/>
+      <details key="nameValidFormat" value="name.matches('[a-z0-9]([-a-z0-9]*[a-z0-9])?')"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dockerImage" eType="#//DockerImage"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ports" upperBound="-1"
+        eType="#//Port" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="environmentVariables" upperBound="-1"
+        eType="#//EnvironmentVariable" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resources" eType="#//ResourceRequirements"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="command" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="args" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Pod">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="nameRequired containersNotEmpty containerNamesUnique namespaceFormat nameValidFormat"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="nameRequired" value="not name.oclIsUndefined() and name.size() > 0"/>
+      <details key="containersNotEmpty" value="containers->size() > 0"/>
+      <details key="containerNamesUnique" value="containers->isUnique(c | c.name)"/>
+      <details key="namespaceFormat" value="namespace.oclIsUndefined() or namespace.name.matches('[a-z0-9]([-a-z0-9]*[a-z0-9])?')"/>
+      <details key="nameValidFormat" value="name.matches('[a-z0-9]([-a-z0-9]*[a-z0-9])?')"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="labels" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="annotations" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="containers" upperBound="-1"
+        eType="#//Container" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="namespace" eType="#//Namespace"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="volumes" upperBound="-1"
+        eType="ecore:EClass kubernetes.storage.ecore#//Volume"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="serviceAccount" eType="ecore:EClass kubernetes.security.ecore#//ServiceAccount"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="restartPolicy" eType="#//RestartPolicy"
+        defaultValueLiteral="Always"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="imagePullSecrets" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReplicaSet">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pods" upperBound="-1" eType="#//Pod"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Deployment">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="replicaSet" eType="#//ReplicaSet"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StatefulSet">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pods" upperBound="-1" eType="#//Pod"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DaemonSet">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pods" upperBound="-1" eType="#//Pod"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Job"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CronJob">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jobs" upperBound="-1" eType="#//Job"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ServicePort">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="portRequired portValid targetPortValid nameValidFormat"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="portRequired" value="port > 0"/>
+      <details key="portValid" value="port >= 1 and port &lt;= 65535"/>
+      <details key="targetPortValid" value="targetPort.oclIsUndefined() or (targetPort >= 1 and targetPort &lt;= 65535)"/>
+      <details key="nameValidFormat" value="name.oclIsUndefined() or name.matches('[a-z0-9]([-a-z0-9]*[a-z0-9])?')"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="port" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetPort" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="protocol" eType="#//Protocol"
+        defaultValueLiteral="TCP"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nodePort" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Service">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="nameRequired portsNotEmpty nameValidFormat"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="nameRequired" value="not name.oclIsUndefined() and name.size() > 0"/>
+      <details key="portsNotEmpty" value="ports->size() > 0"/>
+      <details key="nameValidFormat" value="name.matches('[a-z0-9]([-a-z0-9]*[a-z0-9])?')"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//ServiceType"
+        defaultValueLiteral="ClusterIP"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="selector" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ports" upperBound="-1"
+        eType="#//ServicePort" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pods" upperBound="-1" eType="#//Pod"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Ingress">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="nameRequired rulesNotEmpty nameValidFormat"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="nameRequired" value="not name.oclIsUndefined() and name.size() > 0"/>
+      <details key="rulesNotEmpty" value="rules->size() > 0"/>
+      <details key="nameValidFormat" value="name.matches('[a-z0-9]([-a-z0-9]*[a-z0-9])?')"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="annotations" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tls" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="services" upperBound="-1"
+        eType="#//Service"/>
+  </eClassifiers>
+</ecore:EPackage>

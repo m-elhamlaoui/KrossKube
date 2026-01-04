@@ -1,0 +1,176 @@
+[%
+// Get all MultiClusterDeployment instances from the model
+var deployments = MultiClusterDeployment.all;
+%]
+
+[% for (deployment in deployments) { %]
+# Generated MultiCluster Custom Resource Definition
+---
+apiVersion: multicluster.krosskube.io/v1alpha1
+kind: MultiClusterDeployment
+metadata:
+  name: [%=deployment.name%]
+  labels:
+    app: [%=deployment.name%]
+    generated-by: krosskube
+spec:
+  placementPolicy: [%=deployment.placementPolicy%]
+  clusterSelector:
+[% if (deployment.clusterSelector.isDefined() and deployment.clusterSelector.matchLabels.size() > 0) { %]
+    matchLabels:
+[% for (label in deployment.clusterSelector.matchLabels) { %]
+[% if (label.indexOf("=") > -1) { %]
+[% var parts = label.split("="); %]
+      [%=parts.get(0)%]: [%=parts.get(1)%]
+[% } %]
+[% } %]
+[% } %]
+[% if (deployment.clusterSelector.isDefined() and deployment.clusterSelector.matchExpressions.size() > 0) { %]
+    matchExpressions:
+[% for (expr in deployment.clusterSelector.matchExpressions) { %]
+      - [%=expr%]
+[% } %]
+[% } %]
+  template:
+    metadata:
+      name: [%=deployment.name%]
+      labels:
+        app: [%=deployment.name%]
+    spec:
+      placementPolicy: [%=deployment.placementPolicy%]
+
+# Generated standard Kubernetes Deployment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: [%=deployment.name%]
+  labels:
+    app: [%=deployment.name%]
+    managed-by: krosskube
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: [%=deployment.name%]
+  template:
+    metadata:
+      labels:
+        app: [%=deployment.name%]
+[% var firstPod = deployment.deploymentTemplate.replicaSet.pods.first(); %]
+[% if (firstPod.labels.isDefined() and firstPod.labels.size() > 0) { %]
+[% for (label in firstPod.labels) { %]
+[% if (label.indexOf("=") > -1) { %]
+[% var parts = label.split("="); %]
+        [%=parts.get(0)%]: [%=parts.get(1)%]
+[% } %]
+[% } %]
+[% } %]
+[% if (firstPod.annotations.isDefined() and firstPod.annotations.size() > 0) { %]
+      annotations:
+[% for (annotation in firstPod.annotations) { %]
+[% if (annotation.indexOf("=") > -1) { %]
+[% var parts = annotation.split("="); %]
+        [%=parts.get(0)%]: [%=parts.get(1)%]
+[% } %]
+[% } %]
+[% } %]
+    spec:
+[% if (firstPod.restartPolicy.isDefined()) { %]
+      restartPolicy: [%=firstPod.restartPolicy%]
+[% } %]
+[% if (firstPod.imagePullSecrets.isDefined() and firstPod.imagePullSecrets.size() > 0) { %]
+      imagePullSecrets:
+[% for (secret in firstPod.imagePullSecrets) { %]
+        - name: [%=secret%]
+[% } %]
+[% } %]
+      containers:
+[% for (container in firstPod.containers) { %]
+      - name: [%=container.name%]
+[% var image = container.dockerImage; %]
+        image: [% if (image.registry.isDefined()) { %][%=image.registry%]/[% } %][%=image.name%]:[%=image.tag%]
+[% if (image.pullPolicy.isDefined()) { %]
+        imagePullPolicy: [%=image.pullPolicy%]
+[% } %]
+[% if (container.ports.isDefined() and container.ports.size() > 0) { %]
+        ports:
+[% for (port in container.ports) { %]
+        - name: [%=port.name%]
+          containerPort: [%=port.containerPort%]
+[% if (port.protocol.isDefined()) { %]
+          protocol: [%=port.protocol%]
+[% } %]
+[% } %]
+[% } %]
+[% if (container.environmentVariables.isDefined() and container.environmentVariables.size() > 0) { %]
+        env:
+[% for (envVar in container.environmentVariables) { %]
+        - name: [%=envVar.name%]
+          value: "[%=envVar.value%]"
+[% } %]
+[% } %]
+[% if (container.resources.isDefined()) { %]
+        resources:
+[% var res = container.resources; %]
+[% if (res.cpuLimit.isDefined() or res.memoryLimit.isDefined()) { %]
+          limits:
+[% if (res.cpuLimit.isDefined()) { %]
+            cpu: [%=res.cpuLimit%]
+[% } %]
+[% if (res.memoryLimit.isDefined()) { %]
+            memory: [%=res.memoryLimit%]
+[% } %]
+[% } %]
+[% if (res.cpuRequest.isDefined() or res.memoryRequest.isDefined()) { %]
+          requests:
+[% if (res.cpuRequest.isDefined()) { %]
+            cpu: [%=res.cpuRequest%]
+[% } %]
+[% if (res.memoryRequest.isDefined()) { %]
+            memory: [%=res.memoryRequest%]
+[% } %]
+[% } %]
+[% } %]
+[% if (container.command.isDefined() and container.command.size() > 0) { %]
+        command:
+[% for (cmd in container.command) { %]
+          - [%=cmd%]
+[% } %]
+[% } %]
+[% if (container.args.isDefined() and container.args.size() > 0) { %]
+        args:
+[% for (arg in container.args) { %]
+          - [%=arg%]
+[% } %]
+[% } %]
+[% } %]
+
+# Generated Service for the Deployment  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: [%=deployment.name%]-service
+  labels:
+    app: [%=deployment.name%]
+    managed-by: krosskube
+spec:
+  type: ClusterIP
+  selector:
+    app: [%=deployment.name%]
+  ports:
+[% for (container in firstPod.containers) { %]
+[% if (container.ports.isDefined() and container.ports.size() > 0) { %]
+[% for (port in container.ports) { %]
+  - name: [%=port.name%]
+    port: [%=port.containerPort%]
+    targetPort: [%=port.containerPort%]
+[% if (port.protocol.isDefined()) { %]
+    protocol: [%=port.protocol%]
+[% } %]
+[% } %]
+[% } %]
+[% } %]
+
+[% } %]

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="storage" nsURI="krosskube.kubernetes.storage" nsPrefix="storage">
+  <eClassifiers xsi:type="ecore:EClass" name="ExternalStorage">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hostPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="emptyDir" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nfsServer" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nfsPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LabelSelector">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="matchLabels" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="matchExpressions" upperBound="-1"
+        eType="#//LabelSelectorRequirement" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LabelSelectorRequirement">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="keyRequired operatorRequired operatorValid"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="keyRequired" value="not key.oclIsUndefined() and key.size() > 0"/>
+      <details key="operatorRequired" value="not operator.oclIsUndefined() and operator.size() > 0"/>
+      <details key="operatorValid" value="operator.matches('In|NotIn|Exists|DoesNotExist')"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="operator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="values" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PersistentVolume">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="nameRequired capacityRequired accessModesRequired accessModesValid reclaimPolicyValid nameValidFormat"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="nameRequired" value="not name.oclIsUndefined() and name.size() > 0"/>
+      <details key="capacityRequired" value="not capacity.oclIsUndefined() and capacity.size() > 0"/>
+      <details key="accessModesRequired" value="accessModes->size() > 0"/>
+      <details key="accessModesValid" value="accessModes->forAll(mode | mode.matches('ReadWriteOnce|ReadOnlyMany|ReadWriteMany'))"/>
+      <details key="reclaimPolicyValid" value="reclaimPolicy.matches('Retain|Recycle|Delete')"/>
+      <details key="nameValidFormat" value="name.matches('[a-z0-9]([-a-z0-9]*[a-z0-9])?')"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="labels" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="annotations" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="capacity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="accessModes" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="reclaimPolicy" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="storageClassName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mountOptions" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="externalStorage" eType="#//ExternalStorage"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PersistentVolumeClaim">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="nameRequired accessModesValid storageRequested storageFormatValid nameValidFormat"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="nameRequired" value="not name.oclIsUndefined() and name.size() > 0"/>
+      <details key="accessModesValid" value="accessModes->forAll(mode | mode.matches('ReadWriteOnce|ReadOnlyMany|ReadWriteMany'))"/>
+      <details key="storageRequested" value="not storageRequest.oclIsUndefined() and storageRequest.size() > 0"/>
+      <details key="storageFormatValid" value="storageRequest.matches('[0-9]+(Ei|Pi|Ti|Gi|Mi|Ki)')"/>
+      <details key="nameValidFormat" value="name.matches('[a-z0-9]([-a-z0-9]*[a-z0-9])?')"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="namespace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="labels" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="annotations" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="accessModes" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="storageRequest" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="storageClassName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="volumeName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="persistentVolume" eType="#//PersistentVolume"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selector" eType="#//LabelSelector"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Volume">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="nameRequired" value="not name.oclIsUndefined() and name.size() > 0"/>
+      <details key="nameValid" value="name.matches('[a-z0-9]([-a-z0-9]*[a-z0-9])?')"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="claim" eType="#//PersistentVolumeClaim"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="secret" eType="ecore:EClass kubernetes.config.ecore#//Secret"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="configMap" eType="ecore:EClass kubernetes.config.ecore#//ConfigMap"/>
+  </eClassifiers>
+</ecore:EPackage>
