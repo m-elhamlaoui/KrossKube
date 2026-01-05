@@ -108,39 +108,40 @@ _Figure: The KrossKube logo_
 
 ### [Section II: Implementation & Technology Stack](#ii-implementation--technology-stack)
 
-4. [Technology Stack](#4-technology-stack)
+3. [Technology Stack](#3-technology-stack)
 
-   - [4.1 Eclipse Modeling Framework](#41-eclipse-modeling-framework)
-     - [4.1.1 Obeo Designer Integration](#411-obeo-designer-integration)
-     - [4.1.2 Ecore Metamodeling](#412-ecore-metamodeling)
-     - [4.1.3 EMF Code Generation](#413-emf-code-generation)
-     - [4.1.4 Object Constraint Language (OCL)](#414-object-constraint-language-ocl)
-   - [4.2 Domain-Specific Language](#42-domain-specific-language)
-     - [4.2.1 Xtext Grammar Definition](#421-xtext-grammar-definition)
-     - [4.2.2 Language Infrastructure](#422-language-infrastructure)
-     - [4.2.3 Eclipse IDE Integration](#423-eclipse-ide-integration)
-   - [4.3 Model-To-Text Transformation Engine](#43-model-to-text-transformation-engine)
-     - [4.3.1 Epsilon Generation Language (EGL)](#431-epsilon-generation-language-egl)
+   - [3.1 Eclipse Modeling Framework](#31-eclipse-modeling-framework)
+     - [3.1.1 Obeo Designer Integration](#311-obeo-designer-integration)
+     - [3.1.2 Ecore Metamodeling](#312-ecore-metamodeling)
+     - [3.1.3 EMF Code Generation](#313-emf-code-generation)
+     - [3.1.4 Object Constraint Language (OCL)](#314-object-constraint-language-ocl)
+   - [3.2 Domain-Specific Language](#32-domain-specific-language)
+     - [3.2.1 Xtext Grammar Definition](#321-xtext-grammar-definition)
+     - [3.2.2 Language Infrastructure](#322-language-infrastructure)
+     - [3.2.3 Eclipse IDE Integration](#323-eclipse-ide-integration)
+   - [3.3 Model-To-Text Transformation Engine](#33-model-to-text-transformation-engine)
+     - [3.3.1 Epsilon Generation Language (EGL)](#331-epsilon-generation-language-egl)
+   - [3.4 Xtend Integration](#34-xtend-integration)
 
-5. [Code Generation](#5-code-generation)
-   - [5.1 Generation Strategy](#51-generation-strategy)
-     - [5.1.1 Template-Based Generation](#511-template-based-generation)
-     - [5.1.2 Model-to-Text Transformations](#512-model-to-text-transformations)
-     - [5.1.3 Validation and Verification](#513-validation-and-verification)
-   - [5.2 Target Artifacts](#52-target-artifacts)
-     - [5.2.1 Custom Resource Definitions](#521-custom-resource-definitions)
-     - [5.2.2 Deployment Manifests](#522-deployment-manifests)
+4. [CRD Manifests Generation](#4-code-generation)
+   - [4.1 Generation Strategy](#41-generation-strategy)
+     - [4.1.1 Template-Based Generation](#411-template-based-generation)
+     - [4.1.2 Model-to-Text Transformations](#412-model-to-text-transformations)
+     - [4.1.3 Validation and Verification](#413-validation-and-verification)
+   - [4.2 Target Artifacts](#42-target-artifacts)
+     - [4.2.1 Custom Resource Definitions](#421-custom-resource-definitions)
+     - [4.2.2 Deployment Manifests](#422-deployment-manifests)
 
 ### [Section III: Usage & Reference](#iii-usage--reference)
 
-6. [Examples](#6-examples)
+5. [Examples](#5-examples)
 
-   - [6.1 Basic Models Examples](#61-basic-models-examples)
-   - [6.2 Advanced Models Examples](#62-advanced-models-examples)
+   - [5.1 Basic Models Examples](#51-basic-models-examples)
+   - [5.2 Advanced Models Examples](#52-advanced-models-examples)
 
 ---
 
-7. [End-to-end Practical Walkthrough](#7-walkthrough)
+6. [End-to-end Practical Walkthrough](#6-walkthrough)
 
 ## 1. Overview
 
@@ -232,11 +233,171 @@ The package architecture establishes inheritance hierarchies where concrete Mult
 
 The `ClusterSelector` and `PlacementPolicy` components provide reusable cluster targeting and distribution strategies across all MultiCluster resource types.
 
-### 2.2 Object Constraint Language (OCL)
+---
+
+## Section II: Implementation & Technology Stack
+
+## 3. Technology Stack
+
+<div align="center">
+
+![Eclipse Ecosystem](./assets/tech-tools/tech-stack.png)
+
+_Figure: KrossKube's Eclipse-Based Technology Stack_
+
+</div>
+
+KrossKube leverages the Eclipse Modeling ecosystem. The technology stack integrates multiple Eclipse technologies as **_plugins_** to deliver metamodel-based abstractions, domain-specific language capabilities, advanced model transformations, and automated code generation.
+
+### 3.1 Eclipse Modeling Framework
+
+<div align="center">
+
+![EMF Ecosystem](./assets/tech-tools/logo_emf.png)
+
+_Figure: Eclipse EMF: Eclipse Modeling Framework_
+
+</div>
+
+The Eclipse Modeling Framework (EMF) serves as the foundational technology layer, providing the core infrastructure for metamodel definition, model instance management, and code generation capabilities.
+
+#### 3.1.1 Obeo Designer Integration
+
+<div align="center">
+
+![Obeo Designer](./assets/tech-tools/logo_obeodesigner.png)
+
+_Figure: Obeo Designer: MDE-ready Eclipse Package_
+
+</div>
+
+**Use Case**: KrossKube leverages Obeo Designer Community instead of a native Eclipse distribution because it provides a **ready-to-use integration** of the main Eclipse Modeling Project's components as a unified set of modeling frameworks, tooling, and standard implementations. This eliminates the complexity of manually configuring and integrating multiple Eclipse modeling plugins.
+
+**Why Obeo Designer Over Native Eclipse**:
+
+Obeo Designer Community delivers a comprehensive, pre-configured modeling environment that includes:
+
+- **EMF (Eclipse Modeling Framework)**: For building tools based on structured data models
+- **Sirius (Graphical Modeling Framework)**: For creating sophisticated graphical editors
+- **Ecore Tools**: For defining Domain-Specific Languages (DSLs)
+- **EMF Compare**: For comparing and merging EMF models during collaborative development
+- **Acceleo**: A template-based code generation language and toolkit
+- **Integrated Validation Framework**: Real-time constraint checking and error reporting
+- **Model Repository Management**: Version control and team collaboration features
+
+This pre-integrated approach significantly reduces setup complexity and provides enterprise-grade modeling capabilities out-of-the-box, enabling domain experts to focus on KrossKube's architectural evolution rather than toolchain configuration.
+
+#### 3.1.2 Ecore Metamodeling
+
+**Use Case**: Ecore serves as KrossKube's **meta-metamodel**, providing the foundational language for defining the abstract syntax and semantic structure of KrossKube's domain concepts. It establishes the formal specification framework that enables precise definition of MultiCluster resources and their relationships with native Kubernetes components.
+
+<ins>**Package-Oriented Architecture**</ins>: The KrossKube Ecore metamodel is implemented using a **modular package-oriented approach**, where each functional domain corresponds to a dedicated `.ecore` file. This architectural decision provides clear separation of concerns, enhanced maintainability, and modular evolution capabilities.
+
+<div align="center">
+
+![KrossKube MultiCluster Package](./assets/screenshots/krosskube_multicluster_package.png)
+
+_Figure: KrossKube Multi-Cluster Package Structure in Ecore Editor_
+
+</div>
+
+<div align="center">
+
+![Kubernetes Config Package](./assets/screenshots/kubernetes_config_package.png)
+
+_Figure: Kubernetes Config Package Structure in Ecore Editor_
+
+</div>
+
+<div align="center">
+
+![Kubernetes Runtime Package](./assets/screenshots/kubernetes_runtime_package.png)
+
+_Figure: Kubernetes Runtime Package Structure in Ecore Editor_
+
+</div>
+
+<div align="center">
+
+![Kubernetes Storage Package](./assets/screenshots/kubernetes_storage_package.png)
+
+_Figure: Kubernetes Storage Package Structure in Ecore Editor_
+
+</div>
+
+<div align="center">
+
+![Kubernetes Security Package](./assets/screenshots/kubernetes_security_package.png)
+
+_Figure: Kubernetes Security Package Structure in Ecore Editor_
+
+</div>
+
+**Metamodel Package Structure**:
+
+- **[kubernetes.config.ecore](./metamodel/kubernetes.config.ecore)**: Configuration management abstractions (ConfigMap, Secret)
+- **[kubernetes.runtime.ecore](./metamodel/kubernetes.runtime.ecore)**: Workload and execution abstractions (Pod, Deployment, Service, etc.)
+- **[kubernetes.storage.ecore](./metamodel/kubernetes.storage.ecore)**: Persistent storage abstractions (PersistentVolume, PersistentVolumeClaim)
+- **[kubernetes.security.ecore](./metamodel/kubernetes.security.ecore)**: RBAC and security abstractions (Role, RoleBinding, ServiceAccount)
+- **[krosskube.multicluster.ecore](./metamodel/krosskube.multicluster.ecore)**: Multi-cluster management abstractions and placement policies
+
+This package-oriented approach enables KrossKube to maintain a comprehensive yet manageable metamodel that scales with evolving Kubernetes specifications while preserving architectural integrity.
+
+> **Check Metamodel Ecore Files**
+
+> [-> /metamodel/krosskube.multicluster.ecore](./metamodel/krosskube.multicluster.ecore)
+
+> [-> /metamodel/kubernetes.runtime.ecore](./metamodel/kubernetes.runtime.ecore)
+
+> [-> /metamodel/kubernetes.storage.ecore](./metamodel/kubernetes.storage.ecore)
+
+> [-> /metamodel/kubernetes.config.ecore](./metamodel/kubernetes.config.ecore)
+
+> [-> /metamodel/kubernetes.security.ecore](./metamodel/kubernetes.security.ecore)
+
+#### 3.1.3 EMF Java API Code Generation
+
+**Use Case**: EMF's code generation capabilities automatically produce comprehensive Java implementation classes from the Ecore metamodel definition. This eliminates manual coding of model management infrastructure and ensures consistency between metamodel specification and runtime implementation.
+
+<ins>**Generation Configuration**</ins>: The code generation process is orchestrated through the **[krosskube.genmodel](./metamodel/krosskube.genmodel)** file, which serves as the central configuration for EMF's generator framework. This GenModel file defines:
+
+<div align="center">
+
+![Genmodel File](./assets/screenshots/genmodel_structure.png)
+
+_Figure: Kubernetes Runtime Package Structure in Ecore Editor_
+
+</div>
+
+**Generated Java API Architecture**:
+
+- **Model Classes**: Type-safe Java classes for all metamodel concepts with getter/setter accessors
+- **Factory Classes**: Centralized creation patterns for model instance instantiation and management
+- **Package Classes**: Registry and metadata management for each Ecore package
+- **Serialization Framework**: XMI and XML serialization/deserialization support for model persistence
+- **Notification System**: Observer pattern implementation for tracking model changes and evolution
+- **Reflection API**: Runtime introspection capabilities for dynamic model manipulation
+- **Validation Framework**: Integration hooks for OCL constraint evaluation and error reporting
+
+<div align="center">
+
+![Generated Java API](./assets/screenshots/generated_java_api.png)
+
+_Figure: Kubernetes Runtime Package Structure in Ecore Editor_
+
+</div>
+
+This automated generation approach reduces development effort by over **~80%** while maintaining perfect synchronization between metamodel specifications and runtime implementation, ensuring that KrossKube's model management infrastructure evolves consistently with its architectural design.
+
+> **Check Genmodel File**
+
+> [/metamodel/krosskube.genmodel](./metamodel/krosskube.genmodel)
+
+#### 3.1.4 Object Constraint Language (OCL)
 
 The KrossKube metamodel implements comprehensive OCL constraints enforcing semantic correctness and Kubernetes specification compliance across all model instances:
 
-#### 2.2.1 Naming Conventions & Format Validation
+##### 4.1.4.1 Naming Conventions & Format Validation
 
 **DNS Compliance**: All resources enforce Kubernetes naming rules:
 
@@ -246,7 +407,7 @@ nameMaxLength: name.size() <= 253
 nameRequired: not name.oclIsUndefined() and name.size() > 0
 ```
 
-#### 2.2.2 Resource Template Consistency
+##### 4.1.4.2 Resource Template Consistency
 
 **Template Structure Validation**:
 
@@ -256,7 +417,7 @@ podHasContainers: podTemplate.containers->size() > 0
 containerImagesSpecified: podTemplate.containers->forAll(c | not c.dockerImage.oclIsUndefined())
 ```
 
-#### 2.2.3 Cluster Selection & Placement Validation
+##### 4.1.4.3 Cluster Selection & Placement Validation
 
 **Selector Logic Consistency**:
 
@@ -266,7 +427,7 @@ clusterSelectorForDistribution: (placementPolicy = PlacementPolicy::DISTRIBUTED 
     placementPolicy = PlacementPolicy::BALANCED) implies not clusterSelector.oclIsUndefined()
 ```
 
-#### 2.2.4 Kubernetes Specification Compliance
+##### 4.1.4.4 Kubernetes Specification Compliance
 
 **Standard Resource Validation**:
 
@@ -282,7 +443,7 @@ typeValid: type.matches('Opaque|kubernetes.io/service-account-token|kubernetes.i
 storageFormatValid: storageRequest.matches('[0-9]+(Ei|Pi|Ti|Gi|Mi|Ki)')
 ```
 
-#### 2.2.5 RBAC & Security Validation
+##### 4.1.4.5 RBAC & Security Validation
 
 **Policy Completeness**:
 
@@ -292,7 +453,7 @@ verbsNotEmpty: verbs->size() > 0
 roleBindingHasRole: not roleBindingTemplate.role.oclIsUndefined()
 ```
 
-#### 2.2.6 Data Integrity & Cross-Reference Validation
+##### 4.1.4.6 Data Integrity & Cross-Reference Validation
 
 **Configuration & References**:
 
@@ -304,6 +465,239 @@ operatorValid: operator.matches('In|NotIn|Exists|DoesNotExist')
 
 The constraint system integrates with Eclipse Modeling Framework validation infrastructure, providing real-time feedback during model development.
 
-> **Check Metamodel Files**
+> **Check OCL contrsaints in the Metamodel Files**
 
-> [/metamodel/*.ecore/](./metamodel)
+> [/metamodel/\*.ecore/](./metamodel)
+
+### 3.2 Domain-Specific Language
+
+<div align="center">
+
+![Xtext Language Engineering](./assets/tech-tools/logo_xtext.png)
+
+_Figure: Xtext-Based DSL Infrastructure_
+
+</div>
+
+KrossKube implements a custom Domain-Specific Language (DSL) using Eclipse Xtext to provide intuitive, textual syntax for defining MultiCluster resources. The DSL abstracts complex Kubernetes concepts into domain-friendly constructs while maintaining full expressiveness for multi-cluster deployment scenarios.
+
+#### 3.2.1 Xtext Grammar Definition
+
+**Use Case**: Xtext grammar defines the concrete syntax and parsing rules for the KrossKube DSL, enabling developers to express multi-cluster resource definitions using natural, declarative syntax rather than verbose XML or programmatic APIs.
+
+**Implementation**: The grammar specification establishes:
+
+```xtext
+/**
+    Base DSL rule for MultiClutser resources
+*/
+MultiClusterResource returns MultiClusterResource:
+    MultiClusterConfigMap | MultiClusterCronJob | MultiClusterDaemonSet |
+    MultiClusterDeployment | MultiClusterIngress | MultiClusterPersistentVolume |
+    MultiClusterPersistentVolumeClaim | MultiClusterPod | MultiClusterRole |
+    MultiClusterRoleBinding | MultiClusterSecret | MultiClusterService |
+    MultiClusterStatefulSet;
+```
+
+**Cluster Selection Syntax**:
+
+```xtext
+ClusterSelector returns ClusterSelector:
+    {ClusterSelector}
+    'ClusterSelector'
+    '{'
+        ('matchLabels' '{' matchLabels+=EString ( "," matchLabels+=EString)* '}' )?
+        ('matchExpressions' '{' matchExpressions+=EString ( "," matchExpressions+=EString)* '}' )?
+    '}';
+```
+
+**Placement Policy Enumeration**:
+
+```xtext
+enum PlacementPolicy returns PlacementPolicy:
+    REPLICATED = 'REPLICATED' | DISTRIBUTED = 'DISTRIBUTED' | BALANCED = 'BALANCED';
+```
+
+**Resource Template Definitions**: The grammar supports comprehensive resource template specifications, such as:
+
+```xtext
+MultiClusterDeployment returns MultiClusterDeployment:
+    {MultiClusterDeployment}
+    'MultiClusterDeployment'
+    name=EString
+    '{'
+        ('clusterSelector' clusterSelector=ClusterSelector)?
+        ('placementPolicy' placementPolicy=PlacementPolicy)?
+        ('deploymentTemplate' deploymentTemplate=Deployment)?
+    '}';
+```
+
+This grammar enables developers to express complex multi-cluster deployments with intuitive syntax while maintaining type safety and semantic validation.
+
+> **Check DSL Grammar File**
+
+> [/mde.krosskube.dsl/src/mde/krosskube/dsl/Dsl.xtext](./mde.krosskube.dsl/src/mde/krosskube/dsl/Dsl.xtext)
+
+#### 3.2.2 Language Infrastructure
+
+**Use Case**: The Xtext-generated language infrastructure provides comprehensive tooling support including parsing, validation, content assist, and error reporting. This transforms the KrossKube DSL into a full-featured development environment.
+
+**Implementation**: The infrastructure provides:
+
+- **Lexical Analysis**: Token recognition for DSL keywords, identifiers, and literals
+- **Syntactic Parsing**: AST construction from textual DSL specifications
+- **Semantic Analysis**: Cross-reference resolution and type checking
+- **Validation Framework**: Real-time error detection and constraint validation
+- **Content Assistance**: Intelligent code completion and suggestion systems
+- **Formatting and Serialization**: Consistent code formatting and model persistence
+
+The language infrastructure ensures that KrossKube DSL provides enterprise-grade development experience comparable to mainstream programming languages.
+
+#### 3.2.3 Eclipse IDE Integration
+
+**Use Case**: Native Eclipse IDE integration provides developers with familiar tooling for KrossKube DSL development, including syntax highlighting, error markers, outline views, and debugging capabilities.
+
+**Implementation**: The integration includes:
+
+- **Syntax Highlighting**: Domain-specific color coding for DSL elements
+- **Error Markers**: Real-time validation with inline error indicators
+- **Outline View**: Hierarchical navigation for complex model structures
+- **Quick Fixes**: Automated resolution suggestions for common issues
+- **Refactoring Support**: Safe renaming and structural modifications
+- **Project Management**: Integrated build and validation workflows
+
+This integration enables seamless adoption of KrossKube DSL within existing Eclipse-based development environments, with Xtend providing additional code generation and transformation capabilities for advanced use cases.
+
+### 3.3 Model-To-Text Transformation Engine
+
+<div align="center">
+
+![Epsilon Generation Language](./assets/tech-tools/epsilon_model_management.png)
+
+_Figure: Epsilon-Based Model Management and Code Generation_
+
+</div>
+
+The Model-to-Text transformation engine leverages Eclipse Epsilon's Generation Language (EGL) to automate the production of Kubernetes Custom Resource Definitions (CRDs) and deployment manifests from high-level MultiCluster resource models.
+
+#### 3.3.1 Epsilon Generation Language (EGL)
+
+**Use Case**: EGL provides template-based code generation capabilities that transform abstract KrossKube models into concrete Kubernetes YAML manifests. This bridge enables organizations to work with high-level abstractions while generating standard Kubernetes resources for deployment.
+
+**Implementation**: The EGL transformation system implements:
+
+**Template Architecture**:
+
+- **Master Templates**: Control overall generation flow and resource orchestration
+- **Resource Templates**: Generate specific Kubernetes resource types (Deployment, Service, etc.)
+- **Common Libraries**: Shared utilities for naming conventions, label management, and validation
+- **Configuration Templates**: Generate ConfigMaps, Secrets, and other configuration resources
+
+**Generation Process**:
+
+1. **Model Analysis**: Parse MultiCluster resource definitions and extract placement policies
+2. **Cluster Targeting**: Evaluate ClusterSelector criteria and placement strategies
+3. **Resource Expansion**: Generate individual Kubernetes resources per target cluster
+4. **Template Processing**: Apply EGL templates to produce YAML manifests
+5. **Validation**: Verify generated resources against Kubernetes schemas
+6. **Artifact Generation**: Output organized directory structures with deployment-ready manifests
+
+**Code Generation Features**:
+
+- **Conditional Generation**: Generate resources only when specific conditions are met
+- **Cross-Reference Resolution**: Maintain consistency in resource references and dependencies
+- **Parameterization**: Support for environment-specific configuration injection
+- **Batch Processing**: Generate multiple resources simultaneously with dependency ordering
+
+The EGL-based approach ensures that generated Kubernetes manifests maintain consistency, follow best practices, and integrate seamlessly with existing Kubernetes tooling and CI/CD pipelines.
+
+**Template Example Structure**:
+
+```egl
+[% for deployment in MultiClusterDeployment.all %]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: [%=deployment.name%]
+  namespace: [%=deployment.namespace%]
+  labels:
+    krosskube.managed: "true"
+    krosskube.placement-policy: "[%=deployment.placementPolicy%]"
+spec:
+  replicas: [%=deployment.deploymentTemplate.replicas%]
+  [% /* Template continues with full Kubernetes Deployment specification */ %]
+[% endfor %]
+```
+
+This transformation approach enables organizations to maintain high-level, reusable model definitions while generating deployment-specific Kubernetes resources that integrate with existing operational workflows.
+
+### 3.4 Xtend Integration
+
+<div align="center">
+
+![Xtend](./assets/tech-tools/logo_xtend.png)
+
+_Figure: Xtend: Java-Compatible Template Language_
+
+</div>
+
+Xtend serves as a powerful complement to the EGL-based code generation system, providing Java-compatible template processing and advanced model transformation capabilities. The integration of Xtend enhances KrossKube's code generation pipeline with type-safe templates, powerful expression syntax, and seamless Java ecosystem integration.
+
+**Use Case**: Xtend templates provide an alternative and complementary approach to EGL for generating Kubernetes YAML manifests. The Java-compatible syntax enables more sophisticated generation logic while maintaining readability and maintainability.
+
+**Implementation**: Xtend templates leverage string interpolation and powerful expression syntax:
+
+```xtend
+class KubernetesGenerator {
+
+    def generateDeployment(MultiClusterDeployment deployment) '''
+        ---
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: «deployment.name»
+          namespace: «deployment.namespace»
+          labels:
+            krosskube.managed: "true"
+            krosskube.placement-policy: "«deployment.placementPolicy»"
+        spec:
+          replicas: «deployment.deploymentTemplate.replicas»
+          selector:
+            matchLabels:
+              «FOR label : deployment.deploymentTemplate.podTemplate.labels SEPARATOR '\n'»
+              «label.key»: "«label.value»"
+              «ENDFOR»
+    '''
+}
+```
+
+The Xtend integration positions KrossKube as a comprehensive platform that bridges high-level modeling abstractions with enterprise-grade deployment automation, providing both template-based generation and programmatic extensibility.
+
+## 4. Code Generation
+
+### 4.1 Generation Strategy
+
+#### 4.1.1 Template-Based Generation
+
+#### 4.1.2 Model-to-Text Transformations
+
+#### 4.1.3 Validation and Verification
+
+### 4.2 Target Artifacts
+
+#### 4.2.1 Custom Resource Definitions
+
+#### 4.2.2 Deployment Manifests
+
+---
+
+## Section III: Usage & Reference
+
+## 5. Examples
+
+### 5.1 Basic Models Examples
+
+### 5.2 Advanced Models Examples
+
+## 6. End-to-end Practical Walkthrough
