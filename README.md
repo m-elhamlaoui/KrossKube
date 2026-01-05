@@ -120,20 +120,14 @@ _Figure: The KrossKube logo_
      - [3.1.4 Object Constraint Language (OCL)](#314-object-constraint-language-ocl)
    - [3.2 Domain-Specific Language](#32-domain-specific-language)
      - [3.2.1 Xtext Grammar Definition](#321-xtext-grammar-definition)
-     - [3.2.2 Language Infrastructure](#322-language-infrastructure)
-     - [3.2.3 Runtime Eclipse IDE Integration](#323-runtim-eclipse-ide-integration)
+     - [3.2.2 Runtime Eclipse IDE Integration](#322-runtim-eclipse-ide-integration)
    - [3.3 Model-To-Text Transformation Engine](#33-model-to-text-transformation-engine)
      - [3.3.1 Epsilon Generation Language (EGL)](#331-epsilon-generation-language-egl)
    - [3.4 Xtend Integration](#34-xtend-integration)
 
 4. [CRD Manifests Generation](#4-code-generation)
-   - [4.1 Generation Strategy](#41-generation-strategy)
-     - [4.1.1 Template-Based Generation](#411-template-based-generation)
-     - [4.1.2 Model-to-Text Transformations](#412-model-to-text-transformations)
-     - [4.1.3 Validation and Verification](#413-validation-and-verification)
-   - [4.2 Target Artifacts](#42-target-artifacts)
-     - [4.2.1 Custom Resource Definitions](#421-custom-resource-definitions)
-     - [4.2.2 Deployment Manifests](#422-deployment-manifests)
+   - [4.1 Template-Based Generation](#41-template-based-generation)
+   - [4.2 Model-to-Text Transformations](#42-model-to-text-transformations)
 
 ### [Section III: Usage & Reference](#iii-usage--reference)
 
@@ -394,7 +388,7 @@ _Figure: Kubernetes Runtime Package Structure in Ecore Editor_
 
 <div align="center">
 
-![Generated Java API](./assets/screenshots/generated_java_api.png)
+![Generated Java API](./assets/screenshots/generated_java_API.png)
 
 _Figure: Kubernetes Runtime Package Structure in Ecore Editor_
 
@@ -533,22 +527,7 @@ This grammar enables developers to express complex multi-cluster deployments wit
 
 > [/mde.krosskube.dsl/src/mde/krosskube/dsl/Dsl.xtext](./mde.krosskube.dsl/src/mde/krosskube/dsl/Dsl.xtext)
 
-#### 3.2.2 Language Infrastructure
-
-**Use Case**: The Xtext-generated language infrastructure provides comprehensive tooling support including parsing, validation, content assist, and error reporting. This transforms the KrossKube DSL into a full-featured development environment.
-
-**Implementation**: The infrastructure provides:
-
-- **Lexical Analysis**: Token recognition for DSL keywords, identifiers, and literals
-- **Syntactic Parsing**: AST construction from textual DSL specifications
-- **Semantic Analysis**: Cross-reference resolution and type checking
-- **Validation Framework**: Real-time error detection and constraint validation
-- **Content Assistance**: Intelligent code completion and suggestion systems
-- **Formatting and Serialization**: Consistent code formatting and model persistence
-
-The language infrastructure ensures that KrossKube DSL provides enterprise-grade development experience comparable to mainstream programming languages.
-
-#### 3.2.3 Runtime Eclipse IDE Integration
+#### 3.2.2 Runtime Eclipse IDE Integration
 
 <div align="center">
 
@@ -572,12 +551,10 @@ _Figure: Autocompletion of KrossKube model in the Runtime Eclipse IDE_
 
 - **Syntax Highlighting**: Domain-specific color coding for DSL elements
 - **Error Markers**: Real-time validation with inline error indicators
-- **Outline View**: Hierarchical navigation for complex model structures
+- **Outline View**: Hierarchical navigation for model structures
 - **Quick Fixes**: Automated resolution suggestions for common issues
-- **Refactoring Support**: Safe renaming and structural modifications
-- **Project Management**: Integrated build and validation workflows
 
-This integration enables seamless adoption of KrossKube DSL within existing Eclipse-based development environments, with Xtend providing additional code generation and transformation capabilities for advanced use cases.
+This integration enables the adoption of KrossKube DSL within existing Eclipse-based development environments, with Xtend providing additional code generation and transformation capabilities for advanced use cases.
 
 ### 3.3 Model-To-Text Transformation Engine
 
@@ -660,19 +637,87 @@ The Xtend integration positions KrossKube as a comprehensive platform that bridg
 
 ## 4. Code Generation
 
-### 4.1 Generation Strategy
+The code generation subsystem represents the culmination of KrossKube's Model-Driven Engineering approach, transforming the high-level MultiCluster resource models into valid Kubernetes YAML CRD manifests.
 
-#### 4.1.1 Template-Based Generation
+### 4.1 Template-Based Generation
 
-#### 4.1.2 Model-to-Text Transformations
+The generation system leverages EGL: Epsilon's Generation Language (EGL) to implement sophisticated template-based transformation patterns:
 
-#### 4.1.3 Validation and Verification
+<div align="center">
 
-### 4.2 Target Artifacts
+![EGL Template Structure](./assets/screenshots/EGL_template.png)
 
-#### 4.2.1 Custom Resource Definitions
+_Figure: EGL Template Structure for KrossKube's MultiCluster Resource Generation_
 
-#### 4.2.2 Deployment Manifests
+</div>
+
+**Template Processing Workflow**:
+
+1. **Model Analysis**: Parse MultiCluster resource definitions and extract cluster targeting policies
+2. **Template Application**: Apply EGL templates to generate both Custom Resource Definitions and standard Kubernetes resources
+3. **Multi-Artifact Generation**: Produce comprehensive deployment packages including:
+   - **MultiCluster Custom Resource Definitions**: High-level abstractions with placement policies
+   - **Standard Kubernetes Deployments**: Native workload specifications
+   - **Service Definitions**: Network exposure and load balancing configurations
+   - **Configuration Resources**: ConfigMaps, Secrets, and RBAC policies
+
+**Generated Artifact Structure**:
+
+The template system generates multiple coordinated Kubernetes resources for each MultiCluster definition:
+
+```yaml
+# MultiCluster Custom Resource Definition
+apiVersion: multicluster.krosskube.io/v1alpha1
+kind: MultiClusterDeployment
+metadata:
+  name: web-app
+  labels:
+    generated-by: krosskube
+spec:
+  placementPolicy: DISTRIBUTED
+  clusterSelector:
+    matchLabels:
+      environment: production
+
+# Standard Kubernetes Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+  labels:
+    managed-by: krosskube
+spec:
+  replicas: 3
+  # ... complete deployment specification
+```
+
+> **Check KrossKube's EGL Template**
+
+> [-> /krosskube-generator.egl](./krosskube-generator.egl)
+
+### 4.2 Model-to-Text Transformations
+
+**Use Case**: The model-to-text transformation pipeline provides the execution engine for converting abstract MultiCluster models into deployable YAML artifacts. This automated process eliminates manual manifest creation while ensuring consistency and compliance with Kubernetes specifications.
+
+**Transformation Engine**: The EGL-based transformation system implements comprehensive model traversal and template processing capabilities:
+
+<div align="center">
+
+![Successful YAML Generation](./assets/screenshots/EGL_successful_YAML_generation.png)
+
+_Figure: Successful YAML Generation from MultiCluster Models_
+
+</div>
+
+**Transformation Process**:
+
+1. **Model Loading**: Import MultiCluster resource models from DSL specifications or serialized model files
+2. **Constraint Validation**: Execute OCL constraints to ensure model consistency and Kubernetes compliance
+3. **Template Orchestration**: Apply hierarchical template processing with dependency resolution
+4. **Artifact Generation**: Produce organized YAML manifests with proper metadata and cross-references
+5. **Validation**: Verify generated resources against Kubernetes schemas and operational policies
+
+The template-based generation approach ensures that KrossKube maintains perfect fidelity between high-level model specifications and operational deployment artifacts, enabling reliable multi-cluster resource management at enterprise scale.
 
 ---
 
