@@ -105,22 +105,16 @@ _Figure: The KrossKube logo_
        - [2.1.1.3 Storage Resources](#2113-storage-resources)
        - [2.1.1.4 Security Resources](#2114-security-resources)
      - [2.1.2 KrossKube Multicluster Package](#212-krosskube-multicluster-package)
-   - [2.2 Object Constraint Language (OCL)](#22-object-constraint-language-ocl)
-
-3. [Custom Multi-Cluster Entities](#3-custom-multi-cluster-entities)
-   - [3.1 MultiClusterWorkload](#31-multiclusterworkload)
-   - [3.2 MultiClusterNetwork](#32-multiclusternetwork)
-   - [3.3 MultiClusterStorage](#33-multiclusterstorage)
-   - [3.4 MultiClusterSecurity](#34-multiclustersecurity)
 
 ### [Section II: Implementation & Technology Stack](#ii-implementation--technology-stack)
 
 4. [Technology Stack](#4-technology-stack)
 
    - [4.1 Eclipse Modeling Framework](#41-eclipse-modeling-framework)
-     - [4.1.1 Ecore Metamodeling](#411-ecore-metamodeling)
-     - [4.1.2 EMF Code Generation](#412-emf-code-generation)
-     - [4.1.3 Obeo Designer Integration](#413-obeo-designer-integration)
+     - [4.1.1 Obeo Designer Integration](#411-obeo-designer-integration)
+     - [4.1.2 Ecore Metamodeling](#412-ecore-metamodeling)
+     - [4.1.3 EMF Code Generation](#413-emf-code-generation)
+     - [4.1.4 Object Constraint Language (OCL)](#414-object-constraint-language-ocl)
    - [4.2 Domain-Specific Language](#42-domain-specific-language)
      - [4.2.1 Xtext Grammar Definition](#421-xtext-grammar-definition)
      - [4.2.2 Language Infrastructure](#422-language-infrastructure)
@@ -154,17 +148,25 @@ _Figure: The KrossKube logo_
 
 Managing Kubernetes resources across multiple clusters presents significant operational challenges. Organizations typically face fragmented deployment patterns, inconsistent resource definitions, and complex orchestration workflows when operating distributed Kubernetes environments. Traditional multi-cluster management approaches rely on manual synchronization of YAML manifests and custom scripts.
 
+<div align="center">
+
+![K8s Multi-Cluster Management](./assets/2_EKS_clusters.png)
+
+_Figure: Kubernetes Multi-Cluster Management_
+
+</div>
+
 <ins>**KrossKube**</ins> transforms this paradigm by introducing **`high-level abstractions`** that capture the essential characteristics of multi-cluster resource management while automatically generating the necessary Kubernetes Custom Resource Definitions (CRDs).
 
 ### 1.2 Solution Approach
 
-`KrossKube` addresses this paradigm through a **Model-Driven Engineering** approach that establishes **formal & normalized** **`high-level abstractions`** for multi-cluster Kubernetes resource management. The solution introduces a **_metamodel-based framework_** for defining MultiCluster resources that encapsulate deployment policies, cluster targeting strategies, and resource specifications within unified abstractions.
+<ins>**_KrossKube_**</ins> addresses this paradigm through a **Model-Driven Engineering** approach that establishes **formal & normalized** **`high-level abstractions`** for multi-cluster Kubernetes resource management. The solution introduces a **_metamodel-based framework_** for defining MultiCluster resources that encapsulate deployment policies, cluster targeting strategies, and resource specifications within unified abstractions.
 
 The core innovation lies in <ins>transforming</ins> **high-level MultiCluster resource models** into standard <ins>**Kubernetes Custom Resource Definitions**</ins> through automated `Model-to-Text` YAML code generation. This approach enables declarative specification of multi-cluster deployment intent while maintaining compatibility with existing Kubernetes tooling and workflows.
 
 ## 2. Architecture & Metamodel
 
-KrossKube's Model-Driven Engineering foundation establishes the theoretical and practical framework for systematic transformation of abstract resource models into concrete Kubernetes manifests. This foundation encompasses metamodel definition, model specification & constraint validation.
+KrossKube's Model-Driven Engineering foundation establishes the theoretical and practical framework for systematic transformation of abstract resource models into concrete Kubernetes manifests.
 
 ### 2.1 Metamodel Layer
 
@@ -179,8 +181,6 @@ _Figure: The KrossKube Metamodel UML Class Diagram_
 The metamodel layer defines the abstract syntax and semantic rules for MultiCluster resource specifications. At its core, the `MultiClusterResource` abstract class establishes the foundational interface for all multi-cluster abstractions, providing common attributes for cluster selection and placement policy definition.
 
 Specialized abstract classes extend this foundation to address specific resource categories, and concrete MultiCluster classes inherit from their respective abstract parents, establishing one-to-one mappings with underlying Kubernetes resource types.
-
-The metamodel maintains clear separation between abstract resource definitions and their concrete Kubernetes counterparts.
 
 ### 2.1 Metamodel Sub-Packages
 
@@ -234,53 +234,76 @@ The `ClusterSelector` and `PlacementPolicy` components provide reusable cluster 
 
 ### 2.2 Object Constraint Language (OCL)
 
-The KrossKube metamodel implements a comprehensive OCL constraint system that enforces semantic correctness, Kubernetes specification compliance, and business rule validation across all model instances. The constraint framework addresses multiple validation domains:
+The KrossKube metamodel implements comprehensive OCL constraints enforcing semantic correctness and Kubernetes specification compliance across all model instances:
 
 #### 2.2.1 Naming Conventions & Format Validation
 
-**Kubernetes DNS Compliance**: All resource names must conform to Kubernetes DNS subdomain naming rules through `nameValidFormat` constraints using regex pattern `[a-z0-9]([-a-z0-9]*[a-z0-9])?`. This ensures compatibility with Kubernetes naming requirements across all resource types.
+**DNS Compliance**: All resources enforce Kubernetes naming rules:
 
-**Name Length Restrictions**: Critical resources enforce `nameMaxLength` constraints (e.g., 253 characters for MultiCluster resources) preventing deployment failures due to name truncation.
-
-**Required Name Validation**: Universal `nameRequired` constraints ensure all resources have non-empty, properly defined identifiers.
+```ocl
+nameValidFormat: name.matches('[a-z0-9]([-a-z0-9]*[a-z0-9])?')
+nameMaxLength: name.size() <= 253
+nameRequired: not name.oclIsUndefined() and name.size() > 0
+```
 
 #### 2.2.2 Resource Template Consistency
 
-**MultiCluster Template Validation**: Each MultiCluster resource type enforces template presence and structural integrity:
+**Template Structure Validation**:
 
-- `MultiClusterDeployment`: Validates **_deploymentTemplateRequired_**, **_deploymentHasReplicaSet_**, and **_replicaSetHasPods_**
-- `MultiClusterPod`: Enforces **_podTemplateRequired_**, **_podHasContainers_**, and **_containerImagesSpecified_**
-- **_MultiClusterService_**: Ensures **_serviceTemplateRequired_** and **_serviceHasPodReferences_**
-- `MultiClusterSecret`: Validates **_secretTemplateRequired_**, **_secretHasData_**, and **_secretTypeValid_**
-
-**Container Specification Integrity**: Pod templates must contain valid container definitions with properly specified Docker images and resource configurations.
+```ocl
+deploymentTemplateRequired: not deploymentTemplate.oclIsUndefined()
+podHasContainers: podTemplate.containers->size() > 0
+containerImagesSpecified: podTemplate.containers->forAll(c | not c.dockerImage.oclIsUndefined())
+```
 
 #### 2.2.3 Cluster Selection & Placement Validation
 
-<ins>**Cluster Selector Logic**</ins>: `ClusterSelector` constraints ensure logical consistency through *hasMatchCriteria* (requiring either match labels or expressions) and `matchExpressionsValid` (validating expression syntax for operators like `in`, `not in`, `!=`).
+**Selector Logic Consistency**:
 
-<ins>**Placement Policy Coherence**</ins>: The ***clusterSelectorForDistribution*** constraint enforces that `DISTRIBUTED` and `BALANCED` placement policies require valid cluster selectors, preventing ambiguous deployment scenarios.
+```ocl
+hasMatchCriteria: matchLabels->size() > 0 or matchExpressions->size() > 0
+clusterSelectorForDistribution: (placementPolicy = PlacementPolicy::DISTRIBUTED or
+    placementPolicy = PlacementPolicy::BALANCED) implies not clusterSelector.oclIsUndefined()
+```
 
 #### 2.2.4 Kubernetes Specification Compliance
 
-<ins>**Access Mode Validation**</ins>: Storage resources implement `accessModesValid` constraints ensuring only valid Kubernetes access modes (`ReadWriteOnce`, `ReadOnlyMany`, `ReadWriteMany`) are specified.
+**Standard Resource Validation**:
 
-<ins>**Secret Type Validation**</ins>: `Secret.typeValid` constraints enforce standard Kubernetes secret type patterns including `Opaque`, `kubernetes.io/service-account-token`, `kubernetes.io/dockerconfigjson`, and other official types.
+```ocl
+//-- Storage access modes validation --//
+accessModesValid: accessModes->forAll(mode |
+    mode.matches('ReadWriteOnce|ReadOnlyMany|ReadWriteMany'))
 
-<ins>**Storage Format Validation**</ins>: `PersistentVolumeClaim.storageFormatValid` ensures capacity specifications follow Kubernetes quantity formats with appropriate units (`Gi`, `Mi`, `Ti`, etc.).
+//-- Secret type validation --//
+typeValid: type.matches('Opaque|kubernetes.io/service-account-token|kubernetes.io/dockercfg|kubernetes.io/dockerconfigjson|kubernetes.io/basic-auth|kubernetes.io/ssh-auth|kubernetes.io/tls')
+
+//-- Storage format validation --//
+storageFormatValid: storageRequest.matches('[0-9]+(Ei|Pi|Ti|Gi|Mi|Ki)')
+```
 
 #### 2.2.5 RBAC & Security Validation
 
-**Policy Rule Completeness**: `PolicyRule` constraints enforce `resourcesOrNonResourceURLsRequired` ensuring RBAC rules specify either Kubernetes resources or non-resource URLs, and `verbsNotEmpty` requiring action specifications.
+**Policy Completeness**:
 
-**Role Binding Integrity**: `MultiClusterRoleBinding` implements comprehensive validation including `roleBindingHasRole` and `roleBindingHasServiceAccount` ensuring complete RBAC configurations.
+```ocl
+resourcesOrNonResourceURLsRequired: resources->size() > 0 or nonResourceURLs->size() > 0
+verbsNotEmpty: verbs->size() > 0
+roleBindingHasRole: not roleBindingTemplate.role.oclIsUndefined()
+```
 
 #### 2.2.6 Data Integrity & Cross-Reference Validation
 
-**Configuration Data Validation**: `dataNotEmpty` constraints for ConfigMaps and Secrets ensure meaningful configuration content, while `dataKeysValid` validates key naming patterns.
+**Configuration & References**:
 
-**Cross-Reference Integrity**: Constraints like `pvcHasPersistentVolume` validate referential relationships between related resources, ensuring deployment-time consistency.
+```ocl
+dataNotEmpty: data->size() > 0
+dataKeysValid: data->forAll(key | key.matches('[A-Za-z0-9._-]+'))
+operatorValid: operator.matches('In|NotIn|Exists|DoesNotExist')
+```
 
-**Operator Validation**: Label selector requirements enforce `operatorValid` constraints ensuring only valid operators (`In`, `NotIn`, `Exists`, `DoesNotExist`) are used in selection expressions.
+The constraint system integrates with Eclipse Modeling Framework validation infrastructure, providing real-time feedback during model development.
 
-The constraint system integrates seamlessly with Eclipse Modeling Framework validation infrastructure, providing real-time feedback during model development and preventing invalid model instances from proceeding to code generation phases.
+> **Check Metamodel Files**
+
+> [/metamodel/*.ecore/](./metamodel)
