@@ -157,6 +157,7 @@ Managing Kubernetes resources across multiple clusters presents significant oper
 ![K8s Multi-Cluster Management](./assets/2_EKS_clusters.png)
 
 _Figure: Kubernetes Multi-Cluster Management_
+
 </div>
 
 <ins>**KrossKube**</ins> transforms this paradigm by introducing **`high-level abstractions`** that capture the essential characteristics of multi-cluster resource management while automatically generating the necessary Kubernetes Custom Resource Definitions (CRDs).
@@ -179,7 +180,7 @@ KrossKube's Model-Driven Engineering foundation establishes the theoretical and 
 
 _Figure: The KrossKube Metamodel UML Class Diagram_
 
-***(Click on the figure for a full-screen view)***
+**_(Click on the figure for a full-screen view)_**
 
 </div>
 
@@ -201,7 +202,7 @@ The native Kubernetes packages provide comprehensive modeling support for standa
 
 _Figure: KrossKube's Kubernetes Native Resources Metamodel Package_
 
-***(Click on the figure for a full-screen view)***
+**_(Click on the figure for a full-screen view)_**
 
 </div>
 
@@ -229,18 +230,17 @@ The `kubernetes.security` package defines authentication and authorization abstr
 
 _Figure: KrossKube MultiCluster Abstractions Metamodel Package_
 
-***(Click on the figure for a full-screen view)***
+**_(Click on the figure for a full-screen view)_**
 
 </div>
 
 The `krosskube.multicluster` package introduces the high-level abstractions that extend native Kubernetes resources with multi-cluster management capabilities.
 
----
+<br/>
 
-The package architecture establishes inheritance hierarchies where concrete MultiCluster classes (**MultiClusterDeployment**, **MultiClusterService**, etc.) inherit from categorical abstract classes (***MultiClusterWorkload***, ***MultiClusterNetwork***, etc.). This design ensures consistent interface patterns while enabling specialized behavior for different resource types.
+The package architecture establishes inheritance hierarchies where concrete MultiCluster classes (**MultiClusterDeployment**, **MultiClusterService**, etc.) inherit from categorical abstract classes (**_MultiClusterWorkload_**, **_MultiClusterNetwork_**, etc.). This design ensures consistent interface patterns while enabling specialized behavior for different resource types.
 
-The <ins>***ClusterSelector***</ins> and <ins>***PlacementPolicy***</ins> components provide reusable cluster targeting and distribution strategies across all MultiCluster resource types.
-
+The <ins>**_ClusterSelector_**</ins> and <ins>**_PlacementPolicy_**</ins> components provide reusable cluster targeting and distribution strategies across all MultiCluster resource types.
 
 ## Section II: Implementation & Technology Stack
 
@@ -266,7 +266,13 @@ _Figure: Eclipse EMF: Eclipse Modeling Framework_
 
 </div>
 
-The Eclipse Modeling Framework (EMF) serves as the foundational technology layer, providing the core infrastructure for metamodel definition, model instance management, and code generation capabilities.
+The Eclipse Modeling Framework (EMF) serves as **KrossKube's fundamental base layer**, providing the essential infrastructure that underpins the entire model-driven architecture. As the cornerstone technology, EMF establishes the structural foundation for defining, managing, and transforming KrossKube's metamodel ecosystem.
+
+<ins>**Role as Base Layer**</ins>: EMF functions as the architectural bedrock that enables KrossKube's sophisticated metamodeling capabilities:
+
+- **Metamodel Foundation**: EMF provides the core Ecore meta-metamodel that serves as the formal specification language for defining KrossKube's domain concepts, including MultiCluster resources, Kubernetes native abstractions, and their complex interrelationships.
+
+- **Model Instance Infrastructure**: The framework establishes the runtime architecture for creating, manipulating, and persisting model instances, ensuring type safety and semantic consistency across all KrossKube model operations.
 
 #### 3.1.1 Obeo Designer Integration
 
@@ -280,7 +286,7 @@ _Figure: Obeo Designer: MDE-ready Eclipse Package_
 
 **Use Case**: KrossKube leverages Obeo Designer Community instead of a native Eclipse distribution because it provides a **ready-to-use integration** of the main Eclipse Modeling Project's components as a unified set of modeling frameworks, tooling, and standard implementations. This eliminates the complexity of manually configuring and integrating multiple Eclipse modeling plugins.
 
-**Why Obeo Designer Over Native Eclipse**:
+<ins>**Why Obeo Designer Over Native Eclipse?**</ins>:
 
 Obeo Designer Community delivers a comprehensive, pre-configured modeling environment that includes:
 
@@ -473,7 +479,6 @@ KrossKube implements a custom Domain-Specific Language (DSL) using Eclipse Xtext
 _Figure: Xtext DSL Grammar Generated from the KrossKube's .genmodel_
 
 </div>
-
 
 **Implementation**: The grammar specification establishes:
 
