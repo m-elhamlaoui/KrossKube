@@ -37,7 +37,7 @@ _Figure: The KrossKube logo_
 <table align="center">
     <tr>
         <td align="center">
-            <img src="https://github.com/user-attachments/assets/ce3f09cd-a351-4401-9ace-bbccd85b6f09" width="200" height="200"/>
+            <img src="https://github.com/user-attachments/assets/34c7ffda-5440-4a16-9c36-652a6218c909" width="200" height="200"/>
             <br /><sup>BIDIOUANE <br /> Haitam</sup><br />
             <span><a href="https://github.com/sch0penheimer"><code>@sch0penheimer</code></a></span>
             <br /> <br />
@@ -51,7 +51,7 @@ _Figure: The KrossKube logo_
             </a>
         </td>
         <td align="center">
-            <img src="https://github.com/user-attachments/assets/c5bd80c6-6007-49eb-bc59-e04b8b14c461" width="200" height="200"/>
+            <img src="https://github.com/user-attachments/assets/369d0082-99ca-4458-8e01-d9cde9b9b7ca" width="200" height="200"/>
             <br /><sup>ELMOUDNI <br />Yassine</sup><br />
             <span><a href="https://github.com/Mdn753"><code>@Mdn753</code></a></span>
             <br /> <br />
@@ -63,7 +63,7 @@ _Figure: The KrossKube logo_
             </a>
         </td>
         <td align="center">
-            <img src="https://github.com/user-attachments/assets/840b6a43-cf1e-4df1-af9d-2a9c2f3a3a50" width="200" height="200"/>
+            <img src="https://github.com/user-attachments/assets/010c797d-aeb2-4fbd-a72c-fe79964f3a34" width="200" height="200"/>
             <br /><sup>GHOUZALI <br /> Ayoub</sup>
             <br />
             <span><a href="https://github.com/AyoubGhouzali"><code>@AyoubGhouzali</code></a></span>
@@ -76,7 +76,7 @@ _Figure: The KrossKube logo_
             </a>
         </td>
         <td align="center">
-            <img src="https://github.com/user-attachments/assets/51d45fae-8a6c-4a7c-afc7-41d6dfabcf20" width="200" height="200"/>
+            <img src="https://github.com/user-attachments/assets/a69a4288-3e81-4597-b0ec-54c5430c652e" width="200" height="200"/>
             <br /><sup>ECHAIB <br /> Ayoub</sup><br />
             <span><a href="https://github.com/Ayoech"><code>@Ayoech</code></a></span>
             <br /> <br />
