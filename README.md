@@ -29,6 +29,9 @@ _Figure: The KrossKube logo_
 
 <br/>
 
+> [!NOTE]
+> KrossKube is a project supervised by Pr. [Mahmoud El Hamlaoui](https://github.com/ELHAMLAOUI), proposed and maintained under the [@m-elhamlaoui](https://github.com/m-elhamlaoui) organization.
+
 ## Team Members<a id="team-members"></a>
 
 <table align="center">
