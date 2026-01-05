@@ -118,7 +118,7 @@ _Figure: The KrossKube logo_
    - [3.2 Domain-Specific Language](#32-domain-specific-language)
      - [3.2.1 Xtext Grammar Definition](#321-xtext-grammar-definition)
      - [3.2.2 Language Infrastructure](#322-language-infrastructure)
-     - [3.2.3 Eclipse IDE Integration](#323-eclipse-ide-integration)
+     - [3.2.3 Runtime Eclipse IDE Integration](#323-runtim-eclipse-ide-integration)
    - [3.3 Model-To-Text Transformation Engine](#33-model-to-text-transformation-engine)
      - [3.3.1 Epsilon Generation Language (EGL)](#331-epsilon-generation-language-egl)
    - [3.4 Xtend Integration](#34-xtend-integration)
@@ -154,7 +154,6 @@ Managing Kubernetes resources across multiple clusters presents significant oper
 ![K8s Multi-Cluster Management](./assets/2_EKS_clusters.png)
 
 _Figure: Kubernetes Multi-Cluster Management_
-
 </div>
 
 <ins>**KrossKube**</ins> transforms this paradigm by introducing **`high-level abstractions`** that capture the essential characteristics of multi-cluster resource management while automatically generating the necessary Kubernetes Custom Resource Definitions (CRDs).
@@ -177,6 +176,8 @@ KrossKube's Model-Driven Engineering foundation establishes the theoretical and 
 
 _Figure: The KrossKube Metamodel UML Class Diagram_
 
+***(Click on the figure for a full-screen view)***
+
 </div>
 
 The metamodel layer defines the abstract syntax and semantic rules for MultiCluster resource specifications. At its core, the `MultiClusterResource` abstract class establishes the foundational interface for all multi-cluster abstractions, providing common attributes for cluster selection and placement policy definition.
@@ -196,6 +197,8 @@ The native Kubernetes packages provide comprehensive modeling support for standa
 ![KrossKube MultiCluster Abstractions](./assets/KrossKube_K8s-resources-submetamodel.png)
 
 _Figure: KrossKube's Kubernetes Native Resources Metamodel Package_
+
+***(Click on the figure for a full-screen view)***
 
 </div>
 
@@ -223,17 +226,18 @@ The `kubernetes.security` package defines authentication and authorization abstr
 
 _Figure: KrossKube MultiCluster Abstractions Metamodel Package_
 
+***(Click on the figure for a full-screen view)***
+
 </div>
 
 The `krosskube.multicluster` package introduces the high-level abstractions that extend native Kubernetes resources with multi-cluster management capabilities.
 
 ---
 
-The package architecture establishes inheritance hierarchies where concrete MultiCluster classes (`MultiClusterDeployment`, `MultiClusterService`, etc.) inherit from categorical abstract classes (`MultiClusterWorkload`, `MultiClusterNetwork`, etc.). This design ensures consistent interface patterns while enabling specialized behavior for different resource types.
+The package architecture establishes inheritance hierarchies where concrete MultiCluster classes (**MultiClusterDeployment**, **MultiClusterService**, etc.) inherit from categorical abstract classes (***MultiClusterWorkload***, ***MultiClusterNetwork***, etc.). This design ensures consistent interface patterns while enabling specialized behavior for different resource types.
 
-The `ClusterSelector` and `PlacementPolicy` components provide reusable cluster targeting and distribution strategies across all MultiCluster resource types.
+The <ins>***ClusterSelector***</ins> and <ins>***PlacementPolicy***</ins> components provide reusable cluster targeting and distribution strategies across all MultiCluster resource types.
 
----
 
 ## Section II: Implementation & Technology Stack
 
@@ -333,13 +337,13 @@ _Figure: Kubernetes Security Package Structure in Ecore Editor_
 
 </div>
 
-**Metamodel Package Structure**:
+<ins>**Metamodel Package Structure**</ins>:
 
-- **[kubernetes.config.ecore](./metamodel/kubernetes.config.ecore)**: Configuration management abstractions (ConfigMap, Secret)
-- **[kubernetes.runtime.ecore](./metamodel/kubernetes.runtime.ecore)**: Workload and execution abstractions (Pod, Deployment, Service, etc.)
-- **[kubernetes.storage.ecore](./metamodel/kubernetes.storage.ecore)**: Persistent storage abstractions (PersistentVolume, PersistentVolumeClaim)
-- **[kubernetes.security.ecore](./metamodel/kubernetes.security.ecore)**: RBAC and security abstractions (Role, RoleBinding, ServiceAccount)
-- **[krosskube.multicluster.ecore](./metamodel/krosskube.multicluster.ecore)**: Multi-cluster management abstractions and placement policies
+- **kubernetes.config.ecore**: Configuration management abstractions (ConfigMap, Secret)
+- **kubernetes.runtime.ecore**: Workload and execution abstractions (Pod, Deployment, Service, etc.)
+- **kubernetes.storage.ecore**: Persistent storage abstractions (PersistentVolume, PersistentVolumeClaim)
+- **kubernetes.security.ecore**: RBAC and security abstractions (Role, RoleBinding, ServiceAccount)
+- **krosskube.multicluster.ecore**: Multi-cluster management abstractions and placement policies
 
 This package-oriented approach enables KrossKube to maintain a comprehensive yet manageable metamodel that scales with evolving Kubernetes specifications while preserving architectural integrity.
 
@@ -427,33 +431,7 @@ clusterSelectorForDistribution: (placementPolicy = PlacementPolicy::DISTRIBUTED 
     placementPolicy = PlacementPolicy::BALANCED) implies not clusterSelector.oclIsUndefined()
 ```
 
-##### 4.1.4.4 Kubernetes Specification Compliance
-
-**Standard Resource Validation**:
-
-```ocl
-//-- Storage access modes validation --//
-accessModesValid: accessModes->forAll(mode |
-    mode.matches('ReadWriteOnce|ReadOnlyMany|ReadWriteMany'))
-
-//-- Secret type validation --//
-typeValid: type.matches('Opaque|kubernetes.io/service-account-token|kubernetes.io/dockercfg|kubernetes.io/dockerconfigjson|kubernetes.io/basic-auth|kubernetes.io/ssh-auth|kubernetes.io/tls')
-
-//-- Storage format validation --//
-storageFormatValid: storageRequest.matches('[0-9]+(Ei|Pi|Ti|Gi|Mi|Ki)')
-```
-
-##### 4.1.4.5 RBAC & Security Validation
-
-**Policy Completeness**:
-
-```ocl
-resourcesOrNonResourceURLsRequired: resources->size() > 0 or nonResourceURLs->size() > 0
-verbsNotEmpty: verbs->size() > 0
-roleBindingHasRole: not roleBindingTemplate.role.oclIsUndefined()
-```
-
-##### 4.1.4.6 Data Integrity & Cross-Reference Validation
+##### 4.1.4.4 Data Integrity & Cross-Reference Validation
 
 **Configuration & References**:
 
@@ -484,6 +462,15 @@ KrossKube implements a custom Domain-Specific Language (DSL) using Eclipse Xtext
 #### 3.2.1 Xtext Grammar Definition
 
 **Use Case**: Xtext grammar defines the concrete syntax and parsing rules for the KrossKube DSL, enabling developers to express multi-cluster resource definitions using natural, declarative syntax rather than verbose XML or programmatic APIs.
+
+<div align="center">
+
+![DSL Grammar File](./assets/screenshots/DSL_grammar.png)
+
+_Figure: Xtext DSL Grammar Generated from the KrossKube's .genmodel_
+
+</div>
+
 
 **Implementation**: The grammar specification establishes:
 
@@ -553,7 +540,23 @@ This grammar enables developers to express complex multi-cluster deployments wit
 
 The language infrastructure ensures that KrossKube DSL provides enterprise-grade development experience comparable to mainstream programming languages.
 
-#### 3.2.3 Eclipse IDE Integration
+#### 3.2.3 Runtime Eclipse IDE Integration
+
+<div align="center">
+
+![Runtime IDE](./assets/screenshots/krosskube_runtime-IDE-model.png)
+
+_Figure: A highlighted KrossKube model in KrossKube's Runtime Eclipse IDE_
+
+</div>
+
+<div align="center">
+
+![Runtime IDE Autocompletion](./assets/screenshots/krosskube_runtime-IDE-autocomplete.png)
+
+_Figure: Autocompletion of KrossKube model in the Runtime Eclipse IDE_
+
+</div>
 
 **Use Case**: Native Eclipse IDE integration provides developers with familiar tooling for KrossKube DSL development, including syntax highlighting, error markers, outline views, and debugging capabilities.
 
@@ -572,46 +575,19 @@ This integration enables seamless adoption of KrossKube DSL within existing Ecli
 
 <div align="center">
 
-![Epsilon Generation Language](./assets/tech-tools/epsilon_model_management.png)
+![Epsilon Generation Language](./assets/tech-tools/logo_epsilon.png)
 
 _Figure: Epsilon-Based Model Management and Code Generation_
 
 </div>
 
-The Model-to-Text transformation engine leverages Eclipse Epsilon's Generation Language (EGL) to automate the production of Kubernetes Custom Resource Definitions (CRDs) and deployment manifests from high-level MultiCluster resource models.
+The Model-to-Text transformation engine leverages Eclipse <ins>**Epsilon's Generation Language (EGL)**</ins> to automate the production of Kubernetes Custom Resource Definitions (CRDs) and deployment manifests from high-level MultiCluster resource models.
 
 #### 3.3.1 Epsilon Generation Language (EGL)
 
 **Use Case**: EGL provides template-based code generation capabilities that transform abstract KrossKube models into concrete Kubernetes YAML manifests. This bridge enables organizations to work with high-level abstractions while generating standard Kubernetes resources for deployment.
 
-**Implementation**: The EGL transformation system implements:
-
-**Template Architecture**:
-
-- **Master Templates**: Control overall generation flow and resource orchestration
-- **Resource Templates**: Generate specific Kubernetes resource types (Deployment, Service, etc.)
-- **Common Libraries**: Shared utilities for naming conventions, label management, and validation
-- **Configuration Templates**: Generate ConfigMaps, Secrets, and other configuration resources
-
-**Generation Process**:
-
-1. **Model Analysis**: Parse MultiCluster resource definitions and extract placement policies
-2. **Cluster Targeting**: Evaluate ClusterSelector criteria and placement strategies
-3. **Resource Expansion**: Generate individual Kubernetes resources per target cluster
-4. **Template Processing**: Apply EGL templates to produce YAML manifests
-5. **Validation**: Verify generated resources against Kubernetes schemas
-6. **Artifact Generation**: Output organized directory structures with deployment-ready manifests
-
-**Code Generation Features**:
-
-- **Conditional Generation**: Generate resources only when specific conditions are met
-- **Cross-Reference Resolution**: Maintain consistency in resource references and dependencies
-- **Parameterization**: Support for environment-specific configuration injection
-- **Batch Processing**: Generate multiple resources simultaneously with dependency ordering
-
-The EGL-based approach ensures that generated Kubernetes manifests maintain consistency, follow best practices, and integrate seamlessly with existing Kubernetes tooling and CI/CD pipelines.
-
-**Template Example Structure**:
+**EGL Template Example Structure**:
 
 ```egl
 [% for deployment in MultiClusterDeployment.all %]
