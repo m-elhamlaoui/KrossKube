@@ -133,9 +133,6 @@ _Figure: The KrossKube logo_
 
 5. [Examples](#5-examples)
 
-   - [5.1 Basic Models Examples](#51-basic-models-examples)
-   - [5.2 Advanced Models Examples](#52-advanced-models-examples)
-
 ---
 
 6. [End-to-end Practical Walkthrough](#6-walkthrough)
@@ -666,7 +663,6 @@ _Figure: EGL Template Structure for KrossKube's MultiCluster Resource Generation
 The template system generates multiple coordinated Kubernetes resources for each MultiCluster definition:
 
 ```yaml
-# MultiCluster Custom Resource Definition
 apiVersion: multicluster.krosskube.io/v1alpha1
 kind: MultiClusterDeployment
 metadata:
@@ -679,7 +675,8 @@ spec:
     matchLabels:
       environment: production
 
-# Standard Kubernetes Deployment
+---
+#- Standard Kubernetes Deployment -#
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -688,7 +685,7 @@ metadata:
     managed-by: krosskube
 spec:
   replicas: 3
-  # ... complete deployment specification
+  # ... #
 ```
 
 > **Check KrossKube's EGL Template**
@@ -717,7 +714,7 @@ _Figure: Successful YAML Generation from MultiCluster Models_
 4. **Artifact Generation**: Produce organized YAML manifests with proper metadata and cross-references
 5. **Validation**: Verify generated resources against Kubernetes schemas and operational policies
 
-The template-based generation approach ensures that KrossKube maintains perfect fidelity between high-level model specifications and operational deployment artifacts, enabling reliable multi-cluster resource management at enterprise scale.
+The template-based generation approach ensures that KrossKube maintains perfect fidelity between high-level model specifications and operational deployment artifacts, enabling reliable multi-cluster resource management.
 
 ---
 
@@ -725,8 +722,346 @@ The template-based generation approach ensures that KrossKube maintains perfect 
 
 ## 5. Examples
 
-### 5.1 Basic Models Examples
+This section showcases practical KrossKube model definitions that demonstrate the framework's capabilities across various Kubernetes resource types and multi-cluster deployment scenarios. Each example illustrates how high-level MultiCluster abstractions translate into comprehensive deployment specifications while maintaining declarative simplicity and operational consistency.
 
-### 5.2 Advanced Models Examples
+The following model examples are available in the KrossKube models directory:
+
+### 5.1 Workload Resources
+
+1. **MultiCluster Web Application Deployment**:
+
+> **Check Model**
+
+> [/krosskube_models/web-app-deployment.krosskube](./krosskube_models/web-app-deployment.krosskube)
+
+2. **MultiCluster StatefulSet for Database**:
+
+> **Check Model**
+
+> [/krosskube_models/postgres-statefulset.krosskube](./krosskube_models/postgres-statefulset.krosskube)
+
+3. **MultiCluster Logging DaemonSet**:
+
+> **Check Model**
+
+> [/krosskube_models/logging-daemonset.krosskube](./krosskube_models/logging-daemonset.krosskube)
+
+4. **MultiCluster CronJob for Reports**:
+
+> **Check Model**
+
+> [/krosskube_models/daily-report-cronjob.krosskube](./krosskube_models/daily-report-cronjob.krosskube)
+
+### 5.2 Network Resources
+
+1. **MultiCluster API Gateway Service**:
+
+> **Check Model**
+
+> [/krosskube_models/api-gateway-service.krosskube](./krosskube_models/api-gateway-service.krosskube)
+
+2. **MultiCluster Web Application Ingress**:
+
+> **Check Model**
+
+> [/krosskube_models/web-app-ingress.krosskube](./krosskube_models/web-app-ingress.krosskube)
+
+### 5.3 Configuration Resources
+
+1. **MultiCluster Application Configuration**:
+
+> **Check Model**
+
+> [/krosskube_models/application-config.krosskube](./krosskube_models/application-config.krosskube)
+
+2. **MultiCluster Database Secret**:
+
+> **Check Model**
+
+> [/krosskube_models/database-secret.krosskube](./krosskube_models/database-secret.krosskube)
+
+### 5.4 Storage Resources
+
+1. **MultiCluster PostgreSQL Persistent Volume Claim**:
+
+> **Check Model**
+
+> [/krosskube_models/postgres-pvc.krosskube](./krosskube_models/postgres-pvc.krosskube)
+
+These examples demonstrate KrossKube's modeling expressiveness across the complete spectrum of Kubernetes resource types, showcasing how the framework simplifies multi-cluster resource management through high-level abstractions.
+
+---
 
 ## 6. End-to-end Practical Walkthrough
+
+This section provides a comprehensive step-by-step guide for setting up the KrossKube DSL and Model-to-Text generation pipeline. The walkthrough demonstrates the complete workflow from metamodel setup through Java API generation, DSL infrastructure creation, and finally automated YAML manifest generation from MultiCluster resource models.
+
+The first phase involves setting up the EMF Generator project and configuring the Java API generation from the KrossKube metamodel.
+
+#### Step 1.1: Creating New EMF Generator Project
+
+<div align="center">
+
+![New EMF Generator Project](./assets/screenshots/walkthrough/1_1-new_EMF-generator-project.png)
+
+_Figure: Creating a new EMF Generator Project in Eclipse_
+
+</div>
+
+Begin by creating a new EMF Generator Model project in Eclipse. This project will contain the GenModel configuration and orchestrate the Java API generation process.
+
+#### Step 1.2: Genmodel file Name and Location
+
+<div align="center">
+
+![Project Name and Location](./assets/screenshots/walkthrough/1_2-name-genmodel-choose-location.png)
+
+_Figure: Configuring the genmodel file name and location_
+
+</div>
+
+Specify the Genmodel name and choose the appropriate workspace location for the EMF generator file.
+
+#### Step 1.3: Ecore-Based Generation Selection
+
+<div align="center">
+
+![Ecore Generation Selection](./assets/screenshots/walkthrough/1_3-select-ecore-based-generation.png)
+
+_Figure: Selecting Ecore-based code generation approach_
+
+</div>
+
+Choose "Ecore model" as the foundation for code generation, enabling the system to generate Java APIs directly from the KrossKube Ecore metamodel files.
+
+#### Step 1.4: Metamodel Package Selection
+
+<div align="center">
+
+![Metamodel Packages](./assets/screenshots/walkthrough/1_4-select-all-metamodel-ecore-packages.png)
+
+_Figure: Selecting all KrossKube metamodel packages for generation_
+
+</div>
+
+Select all relevant KrossKube metamodel packages including the multicluster abstractions and native Kubernetes resource packages.
+
+#### Step 1.5: Cross-Reference Package Configuration
+
+<div align="center">
+
+![Cross-Reference Packages](./assets/screenshots/walkthrough/1_5-select-all-crossreferences-packages.png)
+
+_Figure: Configuring cross-reference packages for complete API generation_
+
+</div>
+
+Configure cross-reference packages to ensure complete API generation with proper inter-package dependencies and relationships.
+
+---
+
+#### Step 2.1: GenModel Configuration and Generation
+
+<div align="center">
+
+![GenModel Generation](./assets/screenshots/walkthrough/2_1-genmodel-java-api-generation.png)
+
+_Figure: Executing Java API generation from GenModel configuration_
+
+</div>
+
+Execute the Java API generation process using the configured GenModel file, which will produce comprehensive Java classes for all metamodel concepts (Choose ***Generate All***).
+
+#### Step 2.2: Generated Java API Structure
+
+<div align="center">
+
+![Generated Java API](./assets/screenshots/walkthrough/2_2-generated_java_API.png)
+
+_Figure: Generated Java API classes and package structure_
+
+</div>
+
+The generation process produces a complete Java API with model classes, factory patterns, and utility classes for all KrossKube metamodel elements.
+
+### 6.3 DSL Infrastructure Development
+
+The second phase focuses on creating the Xtext-based Domain-Specific Language infrastructure.
+
+#### Step 3.1: Xtext Project Instantiation
+
+<div align="center">
+
+![Xtext Project Creation](./assets/screenshots/walkthrough/3_1-instanciate-xtext-project.png)
+
+_Figure: Creating new Xtext project for KrossKube DSL_
+
+</div>
+
+Create a new Xtext project to develop the KrossKube Domain-Specific Language with integrated Eclipse tooling support.
+
+#### Step 3.2: GenModel File Integration
+
+<div align="center">
+
+![GenModel Selection](./assets/screenshots/walkthrough/3_2-select-genmodel-file.png)
+
+_Figure: Integrating existing GenModel file with Xtext project_
+
+</div>
+
+Link the previously created GenModel file to the Xtext project, enabling automatic grammar generation from the metamodel structure.
+
+#### Step 3.3: DSL Grammar Configuration
+
+<div align="center">
+
+![DSL Grammar Configuration](./assets/screenshots/walkthrough/3_3-dsl-defaultPackage-and-grammar-entry-rule.png)
+
+_Figure: Configuring DSL default package and grammar entry rules_
+
+</div>
+
+Configure the DSL's default package structure and define the main grammar entry rule for MultiCluster resource parsing, it's the ***MultiClusterResource base-class***
+
+#### Step 3.4: Package Structure Definition
+
+<div align="center">
+
+![DSL Packages](./assets/screenshots/walkthrough/3_4-dsl-packages.png)
+
+_Figure: Defining DSL package structure and dependencies_
+
+</div>
+
+Establish the DSL package architecture that mirrors the metamodel organization for consistent development experience.
+
+#### Step 3.5: DSL Artifact Generation
+
+<div align="center">
+
+![DSL Artifact Generation](./assets/screenshots/walkthrough/3_5-generate-dsl-artifacts.png)
+
+_Figure: Generating DSL parser, lexer, and tooling artifacts_
+
+</div>
+
+Generate the complete DSL infrastructure including parser, lexer, validator, and Eclipse IDE integration components from right-clicking the **`DSL.xtext`** file.
+
+#### Step 3.6: DSL Infrastructure Completion
+
+<div align="center">
+
+![DSL Infrastructure](./assets/screenshots/walkthrough/3_6-dsl-infrastructure-generation.png)
+
+_Figure: Completed DSL infrastructure with Eclipse tooling integration_
+
+</div>
+
+The generation process produces a comprehensive DSL infrastructure with syntax highlighting, validation, and autocompletion capabilities.
+
+#### Step 3.7: Runtime Eclipse IDE Model Example
+
+<div align="center">
+
+![Runtime IDE Model](./assets/screenshots/walkthrough/3_7-dsl-runtime-eclipse-model-example.png)
+
+_Figure: KrossKube model example in the associated Runtime Eclipse IDE with syntax highlighting_
+
+</div>
+
+The DSL provides a rich editing experience with syntax highlighting and semantic validation for KrossKube model development.
+
+#### Step 3.8: Autocompletion Support
+
+<div align="center">
+
+![IDE Autocompletion](./assets/screenshots/walkthrough/3_8-dsl-runtime-eclipse-model-autocomplete.png)
+
+_Figure: Intelligent autocompletion support in the Runtime Eclipse IDE_
+
+</div>
+
+The integrated development environment provides intelligent autocompletion for MultiCluster resource attributes and relationships.
+
+### 6.4 Model-to-Text Generation Pipeline
+
+The final phase demonstrates the EGL-based transformation from MultiCluster models to Kubernetes YAML manifests.
+
+#### Step 4.1: EGL Template Initiation
+
+<div align="center">
+
+![EGL Template Initiation](./assets/screenshots/walkthrough/4_1-egl-template-initiation.png)
+
+_Figure: Initiating EGL template configuration for model-to-text transformation_
+
+</div>
+
+Begin the EGL template setup process to configure model-to-text transformation from KrossKube models to Kubernetes YAML manifests by creating the base **`.egl`** file
+
+#### Step 4.2: EGL Configuration Setup
+
+<div align="center">
+
+![EGL Configuration](./assets/screenshots/walkthrough/4_2-egl-configuration-setup.png)
+
+_Figure: Configuring EGL transformation parameters and settings_
+
+</div>
+
+Configure the EGL transformation engine with appropriate parameters for processing MultiCluster resource models.
+
+#### Step 4.3: Metamodel Selection for Generation
+
+<div align="center">
+
+![EGL Metamodel Selection](./assets/screenshots/walkthrough/4_3-egl-config-metamodel-selection.png)
+
+_Figure: Selecting KrossKube metamodel for EGL template processing_
+
+</div>
+
+Select the KrossKube metamodel packages that will be available during the template-based generation process.
+
+#### Step 4.4: Input Models and Output Configuration
+
+<div align="center">
+
+![Input/Output Configuration](./assets/screenshots/walkthrough/4_4-input-models-and-output-directories.png)
+
+_Figure: Configuring input model files and output directory structure_
+
+</div>
+
+Specify the input KrossKube model files and configure the output directory structure for generated Kubernetes YAML manifests.
+
+#### Step 4.5: Successful Manifest Generation (Part 1)
+
+<div align="center">
+
+![Successful Generation 1](./assets/screenshots/walkthrough/4_5-successful-modelToText-manifest_1.png)
+
+_Figure: Successfully generated Kubernetes YAML manifests - MultiCluster resources_
+
+</div>
+
+The model-to-text transformation successfully generates comprehensive Kubernetes YAML manifests from high-level MultiCluster resource definitions.
+
+#### Step 4.6: Successful Manifest Generation (Part 2)
+
+<div align="center">
+
+![Successful Generation 2](./assets/screenshots/walkthrough/4_6-successful-modelToText-manifest_2.png)
+
+_Figure: Successfully generated Kubernetes YAML manifests - Native Kubernetes resources_
+
+</div>
+
+The generation process produces both MultiCluster Custom Resource Definitions and corresponding native Kubernetes resources, demonstrating the complete transformation pipeline from abstract models to deployable manifests.
+
+---
+
+<br/>
+
+> © 2026 KrossKube | @[m-elhamlaoui](https://github.com/m-elhamlaoui) organization
