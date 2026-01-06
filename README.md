@@ -37,7 +37,7 @@ _Figure: The KrossKube logo_
 <table align="center">
     <tr>
         <td align="center">
-            <img src="https://github.com/user-attachments/assets/34c7ffda-5440-4a16-9c36-652a6218c909" width="200" height="200"/>
+            <img src="https://github.com/user-attachments/assets/9210cac3-df2e-43ef-b507-b31bf8d81bfb" width="200" height="200"/>
             <br /><sup>BIDIOUANE <br /> Haitam</sup><br />
             <span><a href="https://github.com/sch0penheimer"><code>@sch0penheimer</code></a></span>
             <br /> <br />
@@ -51,7 +51,7 @@ _Figure: The KrossKube logo_
             </a>
         </td>
         <td align="center">
-            <img src="https://github.com/user-attachments/assets/369d0082-99ca-4458-8e01-d9cde9b9b7ca" width="200" height="200"/>
+            <img src="https://github.com/user-attachments/assets/ae0c24a5-b085-4fa8-b6ad-03b7888c9e74" width="200" height="200"/>
             <br /><sup>ELMOUDNI <br />Yassine</sup><br />
             <span><a href="https://github.com/Mdn753"><code>@Mdn753</code></a></span>
             <br /> <br />
@@ -63,7 +63,7 @@ _Figure: The KrossKube logo_
             </a>
         </td>
         <td align="center">
-            <img src="https://github.com/user-attachments/assets/010c797d-aeb2-4fbd-a72c-fe79964f3a34" width="200" height="200"/>
+            <img src="https://github.com/user-attachments/assets/c542d957-2278-4f80-8d60-f7584a20ded4" width="200" height="200"/>
             <br /><sup>GHOUZALI <br /> Ayoub</sup>
             <br />
             <span><a href="https://github.com/AyoubGhouzali"><code>@AyoubGhouzali</code></a></span>
