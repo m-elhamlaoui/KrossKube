@@ -780,7 +780,33 @@ These examples demonstrate KrossKube's modeling expressiveness across the comple
 
 ---
 
-## 6. End-to-end Practical Walkthrough
+## 6. Reviews
+
+The KrossKube DSL has been evaluated by fellow students and collaborators during the development process. Here are testimonials from classmates who have tested and provided feedback on the KrossKube framework:
+
+### 6.1 Student Feedback
+
+<div align="center">
+
+| Reviewer        | Role                                 | Date         | Focus Area                          |
+| --------------- | ------------------------------------ | ------------ | ----------------------------------- |
+| **Kawtar Taik** | Software Engineering Student @ENSIAS | Jan 25, 2026 | DSL Usability & Learning Experience |
+
+</div>
+
+#### 6.1.1 Kawtar Taik - Software Engineering Student @ENSIAS
+
+> _"As a student exploring Kubernetes, KrossKube's DSL made the complex world of multi-cluster management much more approachable. Coming from a traditional programming background, the DSL syntax felt intuitive and helped me understand Kubernetes concepts without getting overwhelmed by YAML configurations and infinite indentation !._
+>
+> _What I found most helpful was how the DSL abstracts away the complexity while still teaching the underlying concepts. The Eclipse IDE integration with syntax highlighting made it easy to experiment with different configurations. The automatic validation helped me catch mistakes early in my learning process."_
+
+**Kawtar Taik** (`kawtartaik123@gmail.com`)  
+_Software Engineering Student @ENSIAS_  
+_January 25, 2026_
+
+---
+
+## 7. End-to-end Practical Walkthrough
 
 This section provides a comprehensive step-by-step guide for setting up the KrossKube DSL and Model-to-Text generation pipeline. The walkthrough demonstrates the complete workflow from metamodel setup through Java API generation, DSL infrastructure creation, and finally automated YAML manifest generation from MultiCluster resource models.
 
