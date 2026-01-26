@@ -83,12 +83,10 @@ _Figure: The KrossKube logo_
 ### [Section I: Foundation & Architecture](#i-foundation--architecture)
 
 1. [Overview](#1-overview)
-
    - [1.1 Problem Statement](#11-problem-statement)
    - [1.2 Solution Approach](#12-solution-approach)
 
 2. [Architecture & Metamodel](#2-architecture--metamodel)
-
    - [2.1 Metamodel Sub-Packages](#21-metamodel-sub-packages)
      - [2.1.1 Kubernetes Native Packages](#211-kubernetes-native-packages)
        - [2.1.1.1 Runtime Resources](#2111-runtime-resources)
@@ -100,7 +98,6 @@ _Figure: The KrossKube logo_
 ### [Section II: Implementation & Technology Stack](#ii-implementation--technology-stack)
 
 3. [Technology Stack](#3-technology-stack)
-
    - [3.1 Eclipse Modeling Framework](#31-eclipse-modeling-framework)
      - [3.1.1 Obeo Designer Integration](#311-obeo-designer-integration)
      - [3.1.2 Ecore Metamodeling](#312-ecore-metamodeling)
@@ -788,9 +785,10 @@ The KrossKube DSL has been evaluated by fellow students and collaborators during
 
 <div align="center">
 
-| Reviewer        | Role                                 | Date         | Focus Area                          |
-| --------------- | ------------------------------------ | ------------ | ----------------------------------- |
-| **Kawtar Taik** | Software Engineering Student @ENSIAS | Jan 25, 2026 | DSL Usability & Learning Experience |
+| Reviewer         | Role                                 | Date         | Focus Area                          |
+| ---------------- | ------------------------------------ | ------------ | ----------------------------------- |
+| **Kawtar Taik**  | Software Engineering Student @ENSIAS | Jan 25, 2026 | DSL Usability & Learning Experience |
+| **Ayoub Echaib** | Software Engineering Student @ENSIAS | Jan 26, 2026 | DSL Usability & Learning Experience |
 
 </div>
 
@@ -803,6 +801,16 @@ The KrossKube DSL has been evaluated by fellow students and collaborators during
 **Kawtar Taik** (`kawtartaik123@gmail.com`)  
 _Software Engineering Student @ENSIAS_  
 _January 25, 2026_
+
+#### 6.1.2 Ayoub Echaib - Software Engineering Student @ENSIAS
+
+> _"Working with KrossKube gave me hands-on experience with Model-Driven Engineering principles that we studied in class. The metamodel structure and the way it generates concrete Kubernetes resources really helped me understand the power of MDE approaches in practice._
+>
+> _The DSL development using Xtext was particularly interesting from a language design perspective. The EGL templates for code generation showed me how model transformations work in real applications. As someone interested in DevOps and cloud technologies, KrossKube provided a perfect combination of software engineering principles and modern infrastructure management."_
+
+**Ayoub Echaib** (`a.echaib03@gmail.com`)  
+_Software Engineering Student @ENSIAS_  
+_January 26, 2026_
 
 ---
 
@@ -884,7 +892,7 @@ _Figure: Executing Java API generation from GenModel configuration_
 
 </div>
 
-Execute the Java API generation process using the configured GenModel file, which will produce comprehensive Java classes for all metamodel concepts (Choose ***Generate All***).
+Execute the Java API generation process using the configured GenModel file, which will produce comprehensive Java classes for all metamodel concepts (Choose **_Generate All_**).
 
 #### Step 2.2: Generated Java API Structure
 
@@ -936,7 +944,7 @@ _Figure: Configuring DSL default package and grammar entry rules_
 
 </div>
 
-Configure the DSL's default package structure and define the main grammar entry rule for MultiCluster resource parsing, it's the ***MultiClusterResource base-class***
+Configure the DSL's default package structure and define the main grammar entry rule for MultiCluster resource parsing, it's the **_MultiClusterResource base-class_**
 
 #### Step 3.4: Package Structure Definition
 
